@@ -6,6 +6,7 @@
 namespace rnd\web;
 
 
+use Rnd;
 use rnd\base\Component;
 
 class Controller extends Component
@@ -31,6 +32,8 @@ class Controller extends Component
 	 */
 	protected $allowedLanguages = [
 	];
+	protected $locale;
+	protected $language;
 	/**
 	 * Current page/post ID
 	 *
@@ -55,8 +58,6 @@ class Controller extends Component
 		}
 		$lang = $req->get( 'lang' );
 		$this->setLanguage( $lang );
-		$this->setCurrency();
-		$this->setLocale();
 		$this->setPageID();
 		$this->setPageTitle();
 	}
@@ -97,24 +98,6 @@ class Controller extends Component
 		}
 	}
 
-	protected function setCurrency()
-	{
-		if ($this->language == 'en') {
-			$this->currency = 'eur';
-		} else {
-			$this->currency = 'bam';
-		}
-	}
-
-	protected function setLocale()
-	{
-		if ($this->language == 'en') {
-			$this->locale = 'en-US';
-		} else {
-			$this->locale = 'hr-HR';
-		}
-	}
-
 	/**
 	 * Gets current language from the website
 	 * @return string
@@ -123,29 +106,6 @@ class Controller extends Component
 	{
 		return $this->language;
 	}
-
-	/**
-	 * Gets page currency
-	 *
-	 * @return string
-	 */
-	public function getCurrency()
-	{
-		return $this->currency;
-	}
-
-
-	/**
-	 * Gets current season
-	 *
-	 * @return null|string
-	 */
-	protected function getSeason()
-	{
-		return $this->season;
-	}
-
-
 
 	/**
 	 * Sets current page ID to a property
@@ -226,11 +186,12 @@ class Controller extends Component
 		$this->headerParams = array_merge( [ 'title' => $this->getPageTitle() ], $this->headerParams );
 		extract( $this->headerParams );
 
+		$themeRoot = Rnd::getAlias('@themeroot');
 
-		if ( file_exists( $this->themePath . '/views/' . $this->viewName . '/header.php' ) ) {
-			include( $this->themePath . '/views/' . $this->viewName . '/header.php' );
+		if ( file_exists( $themeRoot . '/views/' . $this->viewName . '/header.php' ) ) {
+			include( $themeRoot . '/views/' . $this->viewName . '/header.php' );
 		} else {
-			include( $this->themePath . '/views/common/header.php' );
+			include( $themeRoot . '/views/common/header.php' );
 		}
 	}
 
