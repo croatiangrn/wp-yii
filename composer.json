@@ -1,5 +1,6 @@
 {
     "name": "croatiangrn/wp-yii",
+    "license": "BSD-3-Clause",
     "require": {
     },
     "autoload": {
