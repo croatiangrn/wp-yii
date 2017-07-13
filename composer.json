@@ -1,0 +1,14 @@
+{
+    "name": "croatiangrn/wp-yii",
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "rnd\\": ["src/rnd"],
+            "app\\": ["src/app"]
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.1"
+    }
+}
