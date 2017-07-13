@@ -56,8 +56,6 @@ class Controller extends Component
 		if ( $this->viewName === null ) {
 			$this->viewName = $this->createViewName();
 		}
-		$lang = $req->get( 'lang' );
-		$this->setLanguage( $lang );
 		$this->setPageID();
 		$this->setPageTitle();
 	}
@@ -77,25 +75,6 @@ class Controller extends Component
 		}
 		$str = implode('-', $ret);
 		return str_replace('-controller', '', $str);
-	}
-
-	/**
-	 * Sets language on the website
-	 *
-	 * @param string $value
-	 *
-	 * @see init()
-	 */
-	protected function setLanguage( $value ) {
-		if ( $value !== null && in_array( $value, $this->allowedLanguages ) ) {
-			setcookie( 'language', $value, time()+60*60*24*30, COOKIEPATH, COOKIE_DOMAIN );
-			$this->language = $value;
-		} else if(isset($_COOKIE['language']) && in_array($_COOKIE['language'], $this->allowedLanguages)){
-			$this->language = $_COOKIE['language'];
-		} else {
-			$this->language = $this->defaultLanguage;
-			setcookie( 'language', $this->language, time()+60*60*24*30, COOKIEPATH, COOKIE_DOMAIN );
-		}
 	}
 
 	/**
