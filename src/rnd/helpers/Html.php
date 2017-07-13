@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\helpers;
+namespace rnd\helpers;
 
 
 class Html {
