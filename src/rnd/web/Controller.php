@@ -103,21 +103,29 @@ class Controller extends Component
 	/**
 	 * Returns menu
 	 *
-	 * @param string $theme_location  Theme location that must be previously defined in themes 'functions.php'
-	 * @param string $container_id    Optional, id of container div
-	 * @param string $container_class Optional, class of container div
-	 * @param string $menu_class      Optional, class of <ul>
+	 * @param array $args  Arguments for renderMenu method
 	 *
 	 * @return mixed
 	 */
-	public function renderMenu( $theme_location = 'topmenu', $container_id = 'navbar-header', $container_class = 'collapse navbar-collapse', $menu_class = 'nav navbar-nav' )
+	public function renderMenu($args = [] )
 	{
+		$defaults = [
+			'theme_location'  => 'topmenu',
+			'container_id'    => 'navbar-header',
+			'container_class' => 'collapse navbar-collapse',
+			'menu_class'      => 'nav navbar-nav',
+			'echo'            => false
+		];
+
+		$defaults = array_merge($defaults, $args);
+
 		return wp_nav_menu( [
-			'theme_location'  => $theme_location,
-			'container_id'    => $container_id,
-			'container_class' => $container_class,
-			'menu_class'      => $menu_class,
-			'echo'            => false,
+			'theme_location'  => $defaults['theme_location'],
+			'container_id'    => $defaults['container_id'],
+			'container_class' => $defaults['container_class'],
+			'menu_class'      => $defaults['menu_class'],
+			'walker'          => new NavWalker(),
+			'echo'            => $defaults['echo'],
 		] );
 	}
 
