@@ -52,7 +52,6 @@ class Controller extends Component
 
 	public function init()
 	{
-		$req = new Request();
 		if ( $this->viewName === null ) {
 			$this->viewName = $this->createViewName();
 		}
@@ -184,8 +183,10 @@ class Controller extends Component
 		$pageName = $this->viewName;
 		extract( $this->bodyParams );
 
+		$themeRoot = Rnd::getAlias('@themeroot');
+
 		foreach ( $this->sections as $section ) {
-			if ( file_exists( $sectionFile = $this->themePath . '/views/' . $pageName . '/section-' . $section . '.php' ) ) {
+			if ( file_exists( $sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section . '.php' ) ) {
 				include( $sectionFile );
 			}
 		}
@@ -198,8 +199,9 @@ class Controller extends Component
 	 */
 	protected function renderFooter( $params = [] )
 	{
+		$themeRoot = Rnd::getAlias('@themeroot');
 		extract( $params );
-		if ( file_exists( $footerFile = $this->themePath . '/views/common/footer.php' ) ) {
+		if ( file_exists( $footerFile = $themeRoot . '/views/common/footer.php' ) ) {
 			include( $footerFile );
 		}
 	}
