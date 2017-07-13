@@ -8,6 +8,7 @@ namespace rnd\web;
 
 use Rnd;
 use rnd\base\Component;
+use rnd\widgets\NavWalker;
 
 class Controller extends Component
 {
