@@ -34,7 +34,6 @@ class Controller extends Component
 	protected $allowedLanguages = [
 	];
 	protected $locale;
-	protected $language;
 	/**
 	 * Current page/post ID
 	 *
@@ -56,6 +55,8 @@ class Controller extends Component
 		if ( $this->viewName === null ) {
 			$this->viewName = $this->createViewName();
 		}
+
+		$this->setLanguage();
 		$this->setPageID();
 		$this->setPageTitle();
 	}
@@ -77,13 +78,21 @@ class Controller extends Component
 		return str_replace('-controller', '', $str);
 	}
 
+	protected function setLanguage()
+	{
+		$lang = get_locale();
+		$lang_arr = explode('_', $lang);
+
+		Rnd::$app->language = $lang_arr[0];
+	}
+
 	/**
 	 * Gets current language from the website
 	 * @return string
 	 */
 	protected function getLanguage()
 	{
-		return $this->language;
+		return Rnd::$app->language;
 	}
 
 	/**
