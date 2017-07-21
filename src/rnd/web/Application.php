@@ -43,7 +43,7 @@ class Application extends \rnd\base\Application
 		$request = $this->getRequest();
 		Rnd::setAlias('@webroot', dirname($request->getScriptFile()));
 		Rnd::setAlias('@themeroot', get_template_directory());
-		Rnd::setAlias('@approot', '@themeroot/src/app');
+		Rnd::setAlias('@approot', '@themeroot/src/App');
 		Rnd::setAlias('@web', $request->getBaseUrl());
 	}
 
@@ -103,15 +103,6 @@ class Application extends \rnd\base\Application
 	public function getSession()
 	{
 		return $this->get('session');
-	}
-
-	/**
-	 * Returns the user component.
-	 * @return User the user component.
-	 */
-	public function getUser()
-	{
-		return $this->get('user');
 	}
 
 	/**
