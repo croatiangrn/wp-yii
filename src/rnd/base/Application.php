@@ -247,7 +247,7 @@ abstract class Application extends Module
 
 	/**
 	 * Returns the request component.
-	 * @return \rnd\web\Request|\rnd\console\Request the request component.
+	 * @return \rnd\web\Request
 	 */
 	public function getRequest()
 	{
@@ -256,7 +256,7 @@ abstract class Application extends Module
 
 	/**
 	 * Returns the response component.
-	 * @return \rnd\web\Response|\rnd\console\Response the response component.
+	 * @return \rnd\web\Response
 	 */
 	public function getResponse()
 	{

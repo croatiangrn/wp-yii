@@ -7,6 +7,7 @@ namespace rnd\web;
 
 
 use Rnd;
+use rnd\widgets\User;
 
 class Application extends \rnd\base\Application
 {
@@ -43,6 +44,7 @@ class Application extends \rnd\base\Application
 		$request = $this->getRequest();
 		Rnd::setAlias('@webroot', dirname($request->getScriptFile()));
 		Rnd::setAlias('@themeroot', get_template_directory());
+		Rnd::setAlias('@themeurl', get_stylesheet_directory());
 		Rnd::setAlias('@approot', '@themeroot/src/App');
 		Rnd::setAlias('@web', $request->getBaseUrl());
 	}
@@ -106,6 +108,15 @@ class Application extends \rnd\base\Application
 	}
 
 	/**
+	 * Returns the user component
+	 * @return User the user component.
+	 */
+	public function getUser()
+	{
+		return $this->get('user');
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function coreComponents()
@@ -114,6 +125,7 @@ class Application extends \rnd\base\Application
 			'request' => ['class' => 'rnd\web\Request'],
 			'response' => ['class' => 'rnd\web\Response'],
 			'session' => ['class' => 'rnd\web\Session'],
+			'user' => ['class' => 'rnd\widgets\User' ]
 		]);
 	}
 }
