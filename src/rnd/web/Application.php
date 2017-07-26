@@ -44,7 +44,7 @@ class Application extends \rnd\base\Application
 		$request = $this->getRequest();
 		Rnd::setAlias('@webroot', dirname($request->getScriptFile()));
 		Rnd::setAlias('@themeroot', get_template_directory());
-		Rnd::setAlias('@themeurl', get_stylesheet_directory());
+		Rnd::setAlias('@themeurl', get_stylesheet_directory_uri());
 		Rnd::setAlias('@approot', '@themeroot/src/App');
 		Rnd::setAlias('@web', $request->getBaseUrl());
 	}
