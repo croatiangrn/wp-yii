@@ -361,7 +361,7 @@ class BaseRnd
 	 *
 	 * @return string
 	 */
-	public function getCurrentUri()
+	public static function getCurrentUri()
 	{
 		return wp_get_canonical_url();
 	}
