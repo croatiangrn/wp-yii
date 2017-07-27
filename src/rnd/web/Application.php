@@ -6,7 +6,9 @@
 namespace rnd\web;
 
 
+use Detection\MobileDetect;
 use Rnd;
+use rnd\widgets\Device;
 use rnd\widgets\User;
 
 class Application extends \rnd\base\Application
@@ -117,6 +119,15 @@ class Application extends \rnd\base\Application
 	}
 
 	/**
+	 * Returns device component
+	 * @return Device
+	 */
+	public function getDevice()
+	{
+		return $this->get('device');
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function coreComponents()
@@ -125,7 +136,8 @@ class Application extends \rnd\base\Application
 			'request' => ['class' => 'rnd\web\Request'],
 			'response' => ['class' => 'rnd\web\Response'],
 			'session' => ['class' => 'rnd\web\Session'],
-			'user' => ['class' => 'rnd\widgets\User' ]
+			'user' => ['class' => 'rnd\widgets\User' ],
+			'device' => ['class' => 'rnd\widgets\Device']
 		]);
 	}
 }

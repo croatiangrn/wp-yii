@@ -2,11 +2,11 @@
     "name": "croatiangrn/wp-yii",
     "license": "BSD-3-Clause",
     "require": {
+        "mobiledetect/mobiledetectlib": "^2.8"
     },
     "autoload": {
         "psr-4": {
-            "rnd\\": ["src/rnd"],
-            "app\\": ["src/app"]
+            "rnd\\": ["src/rnd"]
         }
     },
     "require-dev": {
