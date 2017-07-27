@@ -6,7 +6,6 @@
 namespace rnd\web;
 
 
-use Detection\MobileDetect;
 use Rnd;
 use rnd\widgets\Device;
 use rnd\widgets\User;

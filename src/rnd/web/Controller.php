@@ -78,12 +78,13 @@ class Controller extends Component
 		return str_replace('-controller', '', $str);
 	}
 
+	/**
+	 * Setter method for language
+	 * Uses default PolyLang function and returns the slug of language
+	 */
 	protected function setLanguage()
 	{
-		$lang = get_locale();
-		$lang_arr = explode('_', $lang);
-
-		Rnd::$app->language = $lang_arr[0];
+		Rnd::$app->language = pll_current_language();
 	}
 
 	/**
