@@ -28,13 +28,6 @@ class Controller extends Component
 	 */
 	protected $bodyParams = [];
 	/**
-	 * Languages that are available on website
-	 * @var array $allowedLanguages
-	 */
-	protected $allowedLanguages = [
-	];
-	protected $locale;
-	/**
 	 * Current page/post ID
 	 *
 	 * @var null|int

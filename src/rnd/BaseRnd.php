@@ -355,4 +355,14 @@ class BaseRnd
 	{
 		return get_object_vars($object);
 	}
+
+	/**
+	 * Returns current URL
+	 *
+	 * @return string
+	 */
+	public function getCurrentUri()
+	{
+		return wp_get_canonical_url();
+	}
 }
