@@ -8,6 +8,7 @@ namespace rnd\web;
 
 use Rnd;
 use rnd\base\Component;
+use rnd\helpers\ArrayHelper;
 use rnd\widgets\NavWalker;
 
 class Controller extends Component
@@ -42,7 +43,16 @@ class Controller extends Component
 	 * @var string $viewName
 	 */
 	protected $viewName = null;
-
+	/**
+	 * Website's default language
+	 *
+	 * @var string
+	 */
+	protected $defaultLanguage = 'en';
+	protected $language = null;
+	/**
+	 * @inheritdoc
+	 */
 	public function init()
 	{
 		if ( $this->viewName === null ) {
@@ -77,7 +87,13 @@ class Controller extends Component
 	 */
 	protected function setLanguage()
 	{
-		Rnd::$app->language = pll_current_language();
+		if (function_exists( pll_current_language())) {
+			Rnd::$app->language = pll_current_language();
+		} else if (Rnd::$app->language === null){
+			Rnd::$app->language = $this->defaultLanguage;
+		} else {
+			Rnd::$app->language = $this->language;
+		}
 	}
 
 	/**
@@ -99,6 +115,11 @@ class Controller extends Component
 		$this->pageID = $this->getPageID();
 	}
 
+	/**
+	 * Getter method for page ID
+	 *
+	 * @return int
+	 */
 	protected function getPageID()
 	{
 		return get_queried_object_id();
@@ -121,7 +142,7 @@ class Controller extends Component
 			'echo'            => false
 		];
 
-		$defaults = array_merge($defaults, $args);
+		$defaults = ArrayHelper::merge($defaults, $args);
 
 		return wp_nav_menu( [
 			'theme_location'  => $defaults['theme_location'],
@@ -173,7 +194,7 @@ class Controller extends Component
 	 */
 	protected function renderHeader()
 	{
-		$this->headerParams = array_merge( [ 'title' => $this->getPageTitle() ], $this->headerParams );
+		$this->headerParams = ArrayHelper::merge( [ 'title' => $this->getPageTitle() ], $this->headerParams );
 		extract( $this->headerParams );
 
 		$themeRoot = Rnd::getAlias('@themeroot');

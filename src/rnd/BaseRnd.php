@@ -7,6 +7,7 @@ namespace rnd;
 use rnd\base\InvalidConfigException;
 use rnd\base\InvalidParamException;
 use rnd\base\UnknownClassException;
+use rnd\di\Container;
 
 defined('RND_BEGIN_TIME') or define('RND_BEGIN_TIME', microtime(true));
 /**
