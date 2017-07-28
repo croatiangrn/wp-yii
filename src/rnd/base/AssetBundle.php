@@ -42,7 +42,7 @@ abstract class AssetBundle extends Object
 					wp_enqueue_style($name . '-css-' . $i, $url, $deps, null);
 				}
 			} else {
-				$url = $cssarr[0];
+				$url = $cssarr;
 				$deps = [];
 				if (Url::isRelative( $url )) {
 					wp_enqueue_style($name . '-css-' . $i, Rnd::getAlias('@themeurl/' . ltrim( $url, '/')), $deps, filemtime(Rnd::getAlias( '@themeroot/' . ltrim( $url, '/'))));
@@ -65,7 +65,7 @@ abstract class AssetBundle extends Object
 					wp_enqueue_script($name . '-js-' . $j, $url, $deps, null, $in_footer);
 				}
 			} else {
-				$url = $jsarr[0];
+				$url = $jsarr;
 				$in_footer = true;
 				$deps = [];
 				if (Url::isRelative( $url )) {
