@@ -31,7 +31,7 @@ abstract class AssetBundle extends Object
 	public function publish()
 	{
 		foreach ( $this->css as $i => $cssarr ) {
-			$name = $cssarr['name'];
+			$name = $cssarr['name'] ?? time();
 			$deps = $cssarr['deps'] ?? [];
 			$url  = $cssarr['url'];
 
