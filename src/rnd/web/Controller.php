@@ -50,6 +50,7 @@ class Controller extends Component
 	 */
 	protected $defaultLanguage = 'en';
 	protected $language = null;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -88,11 +89,9 @@ class Controller extends Component
 	protected function setLanguage()
 	{
 		if (function_exists( pll_current_language())) {
-			Rnd::$app->language = pll_current_language();
-		} else if (Rnd::$app->language === null){
-			Rnd::$app->language = $this->defaultLanguage;
-		} else {
-			Rnd::$app->language = $this->language;
+			$this->language = pll_current_language();
+		} else if ($this->language === null){
+			$this->language = $this->defaultLanguage;
 		}
 	}
 
