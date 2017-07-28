@@ -17,8 +17,6 @@ $config = \rnd\helpers\ArrayHelper::merge(
 
 (new rnd\web\Application($config));
 
-(new \rnd\assets\AppAsset());
-
 // USE THIS FOR PRODUCTION!
 /*
 

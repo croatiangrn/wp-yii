@@ -32,7 +32,7 @@ abstract class AssetBundle extends Object
 	{
 		foreach ( $this->css as $i => $cssarr ) {
 			$name = uniqid('css-');
-			if (is_array($cssarr)) {
+			if (is_array($cssarr) && count($cssarr) > 1) {
 				$deps = $cssarr['deps'] ?? [];
 				$url  = $cssarr['url'];
 
@@ -54,7 +54,7 @@ abstract class AssetBundle extends Object
 
 		foreach ( $this->js as $j => $jsarr ) {
 			$name = uniqid('js-');
-			if (is_array($jsarr)) {
+			if (is_array($jsarr) && count($jsarr) > 1) {
 				$deps = $jsarr['deps'] ?? [];
 				$url  = $jsarr['url'];
 				$in_footer = $jsarr['in_footer'] ?? true;
