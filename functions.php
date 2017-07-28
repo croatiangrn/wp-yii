@@ -28,7 +28,7 @@ $config = [
 	'name' => get_bloginfo('name'),
 ];
 $config = \rnd\helpers\ArrayHelper::merge(
-	require(__DIR__ . '/vendor/croatiangrn/wp-yii/src/rnd/config.php'),
+	require(__DIR__ . '/src/App/wp-yii/src/rnd/config.php'),
 	$config
 );
 
