@@ -7,7 +7,6 @@
 return [
 	'id' => 'app',
 	'basePath' => dirname(__DIR__),
-	'language' => get_locale(),
 	'components' => [
 	]
 ];

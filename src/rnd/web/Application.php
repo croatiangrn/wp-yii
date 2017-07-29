@@ -36,7 +36,6 @@ class Application extends \rnd\base\Application
 	 */
 	public $controller;
 
-
 	/**
 	 * @inheritdoc
 	 */
@@ -48,7 +47,17 @@ class Application extends \rnd\base\Application
 		Rnd::setAlias('@themeurl', get_stylesheet_directory_uri());
 		Rnd::setAlias('@approot', '@themeroot/src/App');
 		Rnd::setAlias('@web', $request->getBaseUrl());
+
+		$this->setLanguage();
 	}
+
+	protected function setLanguage()
+	{
+		if (function_exists( 'pll_current_language')) {
+			$this->language = pll_current_language();
+		}
+	}
+
 
 	private $_homeUrl;
 

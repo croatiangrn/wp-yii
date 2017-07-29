@@ -88,11 +88,7 @@ class Controller extends Component
 	 */
 	protected function setLanguage()
 	{
-		if (function_exists( pll_current_language())) {
-			$this->language = pll_current_language();
-		} else if ($this->language === null){
-			$this->language = $this->defaultLanguage;
-		}
+		$this->language = Rnd::$app->language;
 	}
 
 	/**
