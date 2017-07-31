@@ -9,6 +9,7 @@ namespace rnd\widgets;
 use rnd\base\Component;
 use rnd\base\InvalidCallException;
 use rnd\base\InvalidParamException;
+use rnd\helpers\ArrayHelper;
 use rnd\helpers\Html;
 
 class Pagination extends Component
@@ -16,19 +17,15 @@ class Pagination extends Component
 	/**
 	 * @var array This will be populated using paginate_links() function
 	 */
-	public $pages = [];
+	public $paginate_links = [];
 	/**
 	 * @var string Class name for <ul> tag
 	 */
 	public $className = 'pagination';
 	/**
-	 * @var int Total number of posts
+	 * @var array Pagination args
 	 */
-	public $total;
-	/**
-	 * @var int Current page
-	 */
-	public $current;
+	public $args = [];
 
 	/**
 	 * @inheritdoc
@@ -40,13 +37,17 @@ class Pagination extends Component
 
 	protected function setPagination()
 	{
-		$this->pages = paginate_links([
+		$defaults = [
 			'format'   => '?page=%#%',
 			'current' => $this->current,
 			'total' => $this->total,
 			'type' => 'array',
 			'prev_next' => false
-		]);
+		];
+
+		$new_args = ArrayHelper::merge($defaults, $this->args);
+
+		$this->paginate_links = paginate_links($new_args);
 	}
 
 	/**
@@ -56,7 +57,7 @@ class Pagination extends Component
 	 */
 	public function render()
 	{
-		$pages = $this->pages;
+		$pages = $this->paginate_links;
 		if ($pages === null) {
 			return false;
 		}
