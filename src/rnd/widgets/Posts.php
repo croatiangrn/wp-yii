@@ -92,4 +92,10 @@ class Posts extends Component
 		}
 		return null;
 	}
+
+	public function total()
+	{
+		$q = new WP_Query($this->post_args);
+		return $q->found_posts;
+	}
 }
