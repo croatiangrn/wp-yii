@@ -81,7 +81,8 @@ class Posts extends Component
 	public function setPagination()
 	{
 		$defaults = [
-			'query_param' => 'page',
+			'total' => $this->posts->found_posts,
+			'current' => $this->current_page
 		];
 
 		$new_args = ArrayHelper::merge( $defaults, $this->pagination_args );

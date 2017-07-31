@@ -22,11 +22,13 @@ class Pagination extends Component
 	 */
 	public $className = 'pagination';
 	/**
-	 * Get this value by calling WP_Query($args)->found_posts
-	 *
-	 * @var int|null Total number of posts
+	 * @var int Total number of posts
 	 */
-	public $total = null;
+	public $total;
+	/**
+	 * @var int Current page
+	 */
+	public $current_page;
 
 	/**
 	 * @inheritdoc
