@@ -7,6 +7,7 @@ namespace rnd\widgets;
 
 
 use rnd\base\Component;
+use rnd\base\InvalidCallException;
 use rnd\base\InvalidParamException;
 use rnd\helpers\Html;
 
@@ -28,6 +29,12 @@ class BootstrapPagination extends Component
 	 * @var string Class name for <ul> tag
 	 */
 	public $className = 'pagination';
+	/**
+	 * Get this value by calling WP_Query($args)->max_num_posts
+	 *
+	 * @var int Total number of posts
+	 */
+	public $total;
 
 	/**
 	 * This method checks if query param is valid
@@ -48,9 +55,24 @@ class BootstrapPagination extends Component
 			throw new InvalidParamException('Param `query_param` is not valid! Use "page" or "paged"');
 		}
 
-		if (! is_array($this->pages)) {
-			throw new InvalidParamException('Param `pages` must be an array!');
+		if ($this->total === null) {
+			throw new InvalidParamException('Param `total` must be set!');
 		}
+
+		$this->setCurrentPage();
+
+		$this->setPagination();
+	}
+
+	protected function setPagination()
+	{
+		$this->pages = paginate_links([
+			'format'   => '?page=%#%',
+			'current' => $this->current_page,
+			'total' => $this->total,
+			'type' => 'array',
+			'prev_next' => false
+		]);
 	}
 
 	/**
@@ -62,6 +84,16 @@ class BootstrapPagination extends Component
 	}
 
 	/**
+	 * Getter method for current page property
+	 * 
+	 * @return int
+	 */
+	protected function getCurrentPage()
+	{
+		return $this->current_page;
+	}
+
+	/**
 	 * Renders ul > li tags for pagination in bootstrap style
 	 *
 	 * @return string
@@ -69,6 +101,9 @@ class BootstrapPagination extends Component
 	public function render()
 	{
 		$pages = $this->pages;
+		if ($pages === null) {
+			return false;
+		}
 
 		$pagination = Html::beginTag('ul', ['class' => $this->className]);
 		foreach ( $pages as $k => $page ) {
