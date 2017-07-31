@@ -20,7 +20,7 @@ class Pagination extends Component
 	/**
 	 * @var string Can be 'page' or 'paged'
 	 */
-	protected $query_param = 'page';
+	public $query_param = 'page';
 	/**
 	 * @var int Current page number
 	 */
