@@ -28,7 +28,7 @@ class Pagination extends Component
 	/**
 	 * @var int Current page
 	 */
-	public $current_page;
+	public $current;
 
 	/**
 	 * @inheritdoc
@@ -42,7 +42,7 @@ class Pagination extends Component
 	{
 		$this->pages = paginate_links([
 			'format'   => '?page=%#%',
-			'current' => $this->current_page,
+			'current' => $this->current,
 			'total' => $this->total,
 			'type' => 'array',
 			'prev_next' => false

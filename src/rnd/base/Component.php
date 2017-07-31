@@ -6,6 +6,8 @@
 namespace rnd\base;
 
 
+use Rnd;
+
 class Component extends Object
 {
 	/**
@@ -89,18 +91,9 @@ class Component extends Object
 		} elseif (strncmp($name, 'as ', 3) === 0) {
 			// as behavior: attach behavior
 			$name = trim(substr($name, 3));
-			$this->attachBehavior($name, $value instanceof Behavior ? $value : Yii::createObject($value));
+			$this->attachBehavior($name, $value instanceof Behavior ? $value : Rnd::createObject($value));
 
 			return;
-		}
-
-		// behavior property
-		$this->ensureBehaviors();
-		foreach ($this->_behaviors as $behavior) {
-			if ($behavior->canSetProperty($name)) {
-				$behavior->$name = $value;
-				return;
-			}
 		}
 
 		if (method_exists($this, 'get' . $name)) {
