@@ -18,14 +18,6 @@ class Pagination extends Component
 	 */
 	public $pages = [];
 	/**
-	 * @var string Can be 'page' or 'paged'
-	 */
-	public $query_param = 'page';
-	/**
-	 * @var int Current page number
-	 */
-	public $current_page;
-	/**
 	 * @var string Class name for <ul> tag
 	 */
 	public $className = 'pagination';
@@ -37,26 +29,10 @@ class Pagination extends Component
 	public $total = null;
 
 	/**
-	 * This method checks if query param is valid
-	 *
-	 * @return bool
-	 */
-	protected function isQueryParamValid()
-	{
-		return ($this->query_param == 'page' || $this->query_param == 'paged');
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
-		if (! $this->isQueryParamValid()) {
-			throw new InvalidParamException('Param `query_param` is not valid! Use "page" or "paged"');
-		}
-
-		$this->setCurrentPage();
-
 		$this->setPagination();
 	}
 
@@ -69,24 +45,6 @@ class Pagination extends Component
 			'type' => 'array',
 			'prev_next' => false
 		]);
-	}
-
-	/**
-	 * Setter method for current page property
-	 */
-	protected function setCurrentPage() {
-		$currentPage = ( get_query_var($this->query_param) ) ? get_query_var($this->query_param) : 1;
-		$this->current_page = $currentPage;
-	}
-
-	/**
-	 * Getter method for current page property
-	 *
-	 * @return int
-	 */
-	protected function getCurrentPage()
-	{
-		return $this->current_page;
 	}
 
 	/**

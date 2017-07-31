@@ -7,6 +7,7 @@ namespace rnd\widgets;
 
 
 use rnd\base\Component;
+use rnd\base\InvalidParamException;
 use rnd\helpers\ArrayHelper;
 use WP_Query;
 
@@ -17,9 +18,17 @@ class Posts extends Component
 	 */
 	public $post_args = [];
 	/**
+	 * @var string Query parameter for pagination
+	 */
+	public $query_param = 'paged';
+	/**
 	 * @var int Total number of posts
 	 */
 	protected $number_of_posts;
+	/**
+	 * @var int Current page number
+	 */
+	protected $current_page;
 	/**
 	 * @var Pagination
 	 */
@@ -34,17 +43,40 @@ class Posts extends Component
 	 * @var WP_Query
 	 */
 	public $posts;
+
 	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
+		if (! $this->isQueryParamValid()) {
+			throw new InvalidParamException('Param `query_param` is not valid! Use "page" or "paged"');
+		}
+		$this->setCurrentPage();
 		$this->setPosts();
 		$this->setPagination();
 	}
 
 	/**
-	 * Setter method for Pagination
+	 * This method checks if query param is valid
+	 *
+	 * @return bool
+	 */
+	protected function isQueryParamValid()
+	{
+		return ($this->query_param == 'page' || $this->query_param == 'paged');
+	}
+
+	/**
+	 * Setter method for current page property
+	 */
+	protected function setCurrentPage() {
+		$currentPage = ( get_query_var($this->query_param) ) ? get_query_var($this->query_param) : 1;
+		$this->current_page = $currentPage;
+	}
+
+	/**
+	 * Setter method for Pagination Class
 	 */
 	public function setPagination()
 	{
@@ -75,6 +107,8 @@ class Posts extends Component
 		$defaults = [
 			'post_type'      => 'post',
 			'post_status'    => 'publish',
+			'paged'          => $this->current_page,
+			'posts_per_page' => get_option( 'posts_per_page' ),
 		];
 
 		$new_args = ArrayHelper::merge( $defaults, $this->post_args );
