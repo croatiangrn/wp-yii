@@ -96,6 +96,11 @@ class Posts extends Component
 		$this->posts = new WP_Query($this->args);
 	}
 
+	protected function getNumberOfPosts()
+	{
+		return $this->number_of_posts;
+	}
+
 	/**
 	 * Setter method for number of posts
 	 */
