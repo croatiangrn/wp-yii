@@ -46,6 +46,7 @@ class Posts extends Component
 		}
 		$this->setCurrentPage();
 		$this->setPosts();
+		$this->setNumberOfPosts();
 	}
 
 	/**
@@ -93,5 +94,13 @@ class Posts extends Component
 		$this->args = $new_args;
 
 		$this->posts = new WP_Query($this->args);
+	}
+
+	/**
+	 * Setter method for number of posts
+	 */
+	protected function setNumberOfPosts()
+	{
+		$this->number_of_posts = $this->posts->found_posts;
 	}
 }
