@@ -31,9 +31,9 @@ class Posts extends Component
 	/**
 	 * Queried posts
 	 *
-	 * @var null|WP_Query
+	 * @var WP_Query
 	 */
-	public $posts = null;
+	public $posts;
 	/**
 	 * @inheritdoc
 	 */
