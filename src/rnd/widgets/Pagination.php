@@ -11,7 +11,7 @@ use rnd\base\InvalidCallException;
 use rnd\base\InvalidParamException;
 use rnd\helpers\Html;
 
-class BootstrapPagination extends Component
+class Pagination extends Component
 {
 	/**
 	 * @var array This will be populated using paginate_links() function
@@ -24,7 +24,7 @@ class BootstrapPagination extends Component
 	/**
 	 * @var int Current page number
 	 */
-	protected $current_page = 0;
+	public $current_page;
 	/**
 	 * @var string Class name for <ul> tag
 	 */
@@ -32,9 +32,9 @@ class BootstrapPagination extends Component
 	/**
 	 * Get this value by calling WP_Query($args)->max_num_posts
 	 *
-	 * @var int Total number of posts
+	 * @var int|null Total number of posts
 	 */
-	public $total;
+	public $total = null;
 
 	/**
 	 * This method checks if query param is valid
@@ -53,10 +53,6 @@ class BootstrapPagination extends Component
 	{
 		if (! $this->isQueryParamValid()) {
 			throw new InvalidParamException('Param `query_param` is not valid! Use "page" or "paged"');
-		}
-
-		if ($this->total === null) {
-			throw new InvalidParamException('Param `total` must be set!');
 		}
 
 		$this->setCurrentPage();
@@ -85,7 +81,7 @@ class BootstrapPagination extends Component
 
 	/**
 	 * Getter method for current page property
-	 * 
+	 *
 	 * @return int
 	 */
 	protected function getCurrentPage()
