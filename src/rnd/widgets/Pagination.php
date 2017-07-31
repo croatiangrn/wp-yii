@@ -30,7 +30,7 @@ class Pagination extends Component
 	 */
 	public $className = 'pagination';
 	/**
-	 * Get this value by calling WP_Query($args)->max_num_posts
+	 * Get this value by calling WP_Query($args)->found_posts
 	 *
 	 * @var int|null Total number of posts
 	 */

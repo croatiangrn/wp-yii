@@ -28,20 +28,23 @@ class Posts extends Component
 	 * @var array Arguments that'll be used for Pagination configuration
 	 */
 	public $pagination_args = [];
-
+	/**
+	 * Queried posts
+	 *
+	 * @var null|WP_Query
+	 */
+	public $posts = null;
 	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
-		$this->setPostArgs();
+		$this->setPosts();
 		$this->setPagination();
 	}
 
 	/**
 	 * Setter method for Pagination
-	 *
-	 * @param array $config
 	 */
 	public function setPagination()
 	{
@@ -67,7 +70,7 @@ class Posts extends Component
 	/**
 	 * Setter method for post arguments
 	 */
-	protected function setPostArgs()
+	protected function setPosts()
 	{
 		$defaults = [
 			'post_type'      => 'post',
@@ -77,25 +80,7 @@ class Posts extends Component
 		$new_args = ArrayHelper::merge( $defaults, $this->post_args );
 
 		$this->post_args = $new_args;
-	}
 
-	/**
-	 * Get posts
-	 *
-	 * @return null|WP_Query
-	 */
-	public function allPosts()
-	{
-		$query = new WP_Query($this->post_args);
-		if ($query->have_posts()) {
-			return $query;
-		}
-		return null;
-	}
-
-	public function total()
-	{
-		$q = new WP_Query($this->post_args);
-		return $q->found_posts;
+		$this->posts = new WP_Query($this->post_args);
 	}
 }
