@@ -39,8 +39,8 @@ class Pagination extends Component
 	{
 		$defaults = [
 			'format'   => '?page=%#%',
-			'current' => $this->current,
-			'total' => $this->total,
+			'current' => get_query_var('paged'),
+			'total' => wp_count_posts(),
 			'type' => 'array',
 			'prev_next' => false
 		];

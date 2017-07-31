@@ -67,6 +67,16 @@ class Posts extends Component
 	}
 
 	/**
+	 * Getter method for current page number
+	 *
+	 * @return int
+	 */
+	public function getCurrentPage()
+	{
+		return $this->current_page;
+	}
+
+	/**
 	 * Setter method for post arguments
 	 */
 	protected function setPosts()
