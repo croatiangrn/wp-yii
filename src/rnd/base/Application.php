@@ -47,14 +47,6 @@ abstract class Application extends Module
 	 */
 	public $bootstrap = [];
 	/**
-	 * @var string the namespace that controller classes are located in.
-	 * This namespace will be used to load controller classes by prepending it to the controller class name.
-	 * The default namespace is `app\controllers`.
-	 *
-	 * Please refer to the [guide about class autoloading](guide:concept-autoloading.md) for more details.
-	 */
-	public $controllerNamespace = 'app\\controllers';
-	/**
 	 * @var array list of loaded modules indexed by their class names.
 	 */
 	public $loadedModules = [];
@@ -247,7 +239,7 @@ abstract class Application extends Module
 
 	/**
 	 * Returns the request component.
-	 * @return \rnd\web\Request|\rnd\console\Request the request component.
+	 * @return \rnd\web\Request
 	 */
 	public function getRequest()
 	{
@@ -256,7 +248,7 @@ abstract class Application extends Module
 
 	/**
 	 * Returns the response component.
-	 * @return \rnd\web\Response|\rnd\console\Response the response component.
+	 * @return \rnd\web\Response
 	 */
 	public function getResponse()
 	{

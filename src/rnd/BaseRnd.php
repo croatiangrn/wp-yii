@@ -7,6 +7,7 @@ namespace rnd;
 use rnd\base\InvalidConfigException;
 use rnd\base\InvalidParamException;
 use rnd\base\UnknownClassException;
+use rnd\di\Container;
 
 defined('RND_BEGIN_TIME') or define('RND_BEGIN_TIME', microtime(true));
 /**
@@ -354,5 +355,15 @@ class BaseRnd
 	public static function getObjectVars($object)
 	{
 		return get_object_vars($object);
+	}
+
+	/**
+	 * Returns current URL
+	 *
+	 * @return string
+	 */
+	public static function getCurrentUri()
+	{
+		return wp_get_canonical_url();
 	}
 }
