@@ -151,11 +151,18 @@ class Controller extends Component
 
 	/**
 	 * Getter method for page title
+	 *
+	 * @param $withBlogInfoName bool Whether to show title with site name or not
+	 *
 	 * @return mixed
 	 */
-	protected function getPageTitle()
+	protected function getPageTitle($withBlogInfoName = true)
 	{
-		return $this->headerParams['title'];
+		if ($withBlogInfoName) {
+			return $this->headerParams['title'];
+		}
+
+		return $this->headerParams['title-wpn'];
 	}
 
 	/**
