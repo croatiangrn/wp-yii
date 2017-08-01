@@ -156,7 +156,7 @@ class Controller extends Component
 	 *
 	 * @return mixed
 	 */
-	protected function getPageTitle($withBlogInfoName = true)
+	public function getPageTitle($withBlogInfoName = true)
 	{
 		if ($withBlogInfoName) {
 			return $this->headerParams['title'];
