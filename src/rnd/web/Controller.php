@@ -50,7 +50,10 @@ class Controller extends Component
 	 */
 	protected $defaultLanguage = 'en';
 	protected $language = null;
-
+	/**
+	 * @var View
+	 */
+	protected $view;
 	/**
 	 * @inheritdoc
 	 */
@@ -59,15 +62,13 @@ class Controller extends Component
 		if ( $this->viewName === null ) {
 			$this->viewName = $this->createViewName();
 		}
-
+		$this->setView();
 		$this->setLanguage();
 		$this->setPageID();
 		$this->setPageTitle();
 	}
 
 	/**
-	 *
-	 *
 	 * @return mixed
 	 */
 	protected function createViewName() {
@@ -80,6 +81,16 @@ class Controller extends Component
 		}
 		$str = implode('-', $ret);
 		return str_replace('-controller', '', $str);
+	}
+
+	protected function setView()
+	{
+		$this->view = new View();
+	}
+
+	protected function getView()
+	{
+		return $this->view;
 	}
 
 	/**
@@ -221,9 +232,8 @@ class Controller extends Component
 		$themeRoot = Rnd::getAlias('@themeroot');
 
 		foreach ( $this->sections as $section ) {
-			if ( file_exists( $sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section . '.php' ) ) {
-				include( $sectionFile );
-			}
+			$sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section . '.php';
+			$this->view->renderPhpFile($sectionFile);
 		}
 	}
 
