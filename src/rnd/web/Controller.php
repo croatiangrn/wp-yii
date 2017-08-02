@@ -10,6 +10,7 @@ use Rnd;
 use rnd\base\Component;
 use rnd\base\InvalidParamException;
 use rnd\helpers\ArrayHelper;
+use rnd\helpers\Inflector;
 use rnd\widgets\NavWalker;
 
 class Controller extends Component
@@ -65,18 +66,18 @@ class Controller extends Component
 	}
 
 	/**
+	 * @param string $strToRemove
+	 *
 	 * @return mixed
 	 */
-	protected function createViewName() {
+	protected function createViewName($strToRemove = '-controller') {
 		$reflect = new \ReflectionClass($this);
 		$input = $reflect->getShortName();
-		preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
-		$ret = $matches[0];
-		foreach ($ret as &$match) {
-			$match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
-		}
-		$str = implode('-', $ret);
-		return str_replace('-controller', '', $str);
+
+		$input = Inflector::camel2words( $input, false);
+		$input = Inflector::slug($input);
+
+		return str_replace($strToRemove, '', $input);
 	}
 
 	/**
