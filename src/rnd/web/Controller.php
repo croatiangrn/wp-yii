@@ -265,7 +265,7 @@ class Controller extends Component
 	{
 		foreach ( $this->sections as $key => $section ) {
 			$setParamsMethod = 'setParams' . ucfirst( $section['name'] );
-			if (is_callable( [ $this, $setParamsMethod ])) {
+			if (method_exists($this, $setParamsMethod)) {
 				call_user_func( [$this, $setParamsMethod]);
 			}
 		}
@@ -325,10 +325,10 @@ class Controller extends Component
 	 */
 	public function render( $renderFooter = true )
 	{
-//		$this->renderHeader();
+		$this->renderHeader();
 		$this->renderBody();
-//		if ( $renderFooter ) {
-//			$this->renderFooter();
-//		}
+		if ( $renderFooter ) {
+			$this->renderFooter();
+		}
 	}
 }
