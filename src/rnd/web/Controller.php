@@ -8,6 +8,7 @@ namespace rnd\web;
 
 use Rnd;
 use rnd\base\Component;
+use rnd\base\InvalidParamException;
 use rnd\helpers\ArrayHelper;
 use rnd\widgets\NavWalker;
 
@@ -246,6 +247,30 @@ class Controller extends Component
 		}
 	}
 
+	protected function convertSectionsToArray()
+	{
+
+		$new_sections = [];
+		$old_sections = array_flip($this->sections);
+		foreach ( $old_sections as $key => $section ) {
+			$new_sections[$key] = [
+				'name' => $key,
+				'params' => []
+			];
+		}
+		$this->sections = $new_sections;
+	}
+
+	protected function callParamSetters()
+	{
+		foreach ( $this->sections as $key => $section ) {
+			$setParamsMethod = 'setParams' . ucfirst( $section['name'] );
+			if (is_callable( [ $this, $setParamsMethod ])) {
+				call_user_func( [$this, $setParamsMethod]);
+			}
+		}
+	}
+
 	/**
 	 * This method renders body sections
 	 *
@@ -257,10 +282,12 @@ class Controller extends Component
 		extract( $this->bodyParams );
 
 		$themeRoot = Rnd::getAlias('@themeroot');
+		$this->convertSectionsToArray();
+		$this->callParamSetters();
 
 		foreach ( $this->sections as $section ) {
-			$sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section . '.php';
-			$this->renderPhpFile($sectionFile);
+			$sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section['name'] . '.php';
+			echo $this->renderPhpFile($sectionFile, $section['params']);
 		}
 	}
 
@@ -298,10 +325,10 @@ class Controller extends Component
 	 */
 	public function render( $renderFooter = true )
 	{
-		$this->renderHeader();
+//		$this->renderHeader();
 		$this->renderBody();
-		if ( $renderFooter ) {
-			$this->renderFooter();
-		}
+//		if ( $renderFooter ) {
+//			$this->renderFooter();
+//		}
 	}
 }
