@@ -265,7 +265,7 @@ class Controller extends Component
 	protected function callParamSetters()
 	{
 		foreach ( $this->sections as $key => $section ) {
-			$setParamsMethod = 'setParams' . ucfirst( $section['name'] );
+			$setParamsMethod = 'setParams' . Inflector::camelize( $section['name'] );
 			if (method_exists($this, $setParamsMethod)) {
 				$params = call_user_func( [$this, $setParamsMethod]);
 				$this->sections[$section['name']]['params'] = $params;
