@@ -51,10 +51,6 @@ class Controller extends Component
 	protected $defaultLanguage = 'en';
 	protected $language = null;
 	/**
-	 * @var View
-	 */
-	protected $view;
-	/**
 	 * @inheritdoc
 	 */
 	public function init()
@@ -62,7 +58,6 @@ class Controller extends Component
 		if ( $this->viewName === null ) {
 			$this->viewName = $this->createViewName();
 		}
-		$this->setView();
 		$this->setLanguage();
 		$this->setPageID();
 		$this->setPageTitle();
@@ -81,16 +76,6 @@ class Controller extends Component
 		}
 		$str = implode('-', $ret);
 		return str_replace('-controller', '', $str);
-	}
-
-	protected function setView()
-	{
-		$this->view = new View();
-	}
-
-	protected function getView()
-	{
-		return $this->view;
 	}
 
 	/**
@@ -201,6 +186,48 @@ class Controller extends Component
 	}
 
 	/**
+	 * Renders a view file as a PHP script.
+	 *
+	 * This method treats the view file as a PHP script and includes the file.
+	 * It extracts the given parameters and makes them available in the view file.
+	 * The method captures the output of the included view file and returns it as a string.
+	 *
+	 * This method should mainly be called by view renderer or [[renderFile()]].
+	 *
+	 * @param string    $_file_     absolute path to the view file.
+	 * @param array     $_params_   (name-value pairs) that will be extracted and made available in the view file.
+	 *
+	 * @return string   the rendering result
+	 * @throws \Exception
+	 * @throws \Throwable
+	 */
+	public function renderPhpFile($_file_, $_params_ = [])
+	{
+		$_obInitialLevel_ = ob_get_level();
+		ob_start();
+		ob_implicit_flush(false);
+		extract($_params_, EXTR_OVERWRITE);
+		try {
+			require($_file_);
+			return ob_get_clean();
+		} catch (\Exception $e) {
+			while (ob_get_level() > $_obInitialLevel_) {
+				if (!@ob_end_clean()) {
+					ob_clean();
+				}
+			}
+			throw $e;
+		} catch (\Throwable $e) {
+			while (ob_get_level() > $_obInitialLevel_) {
+				if (!@ob_end_clean()) {
+					ob_clean();
+				}
+			}
+			throw $e;
+		}
+	}
+
+	/**
 	 * This method renders header, sets page title, etc..
 	 *
 	 * @see render()
@@ -233,7 +260,7 @@ class Controller extends Component
 
 		foreach ( $this->sections as $section ) {
 			$sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section . '.php';
-			$this->view->renderPhpFile($sectionFile);
+			$this->renderPhpFile($sectionFile);
 		}
 	}
 
