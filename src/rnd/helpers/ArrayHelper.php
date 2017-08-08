@@ -4,8 +4,38 @@
 namespace rnd\helpers;
 
 
+use rnd\base\InvalidParamException;
+
 class ArrayHelper
 {
+	/**
+	 * Check whether an array or [[\Traversable]] contains an element.
+	 *
+	 * This method does the same as the PHP function [in_array()](http://php.net/manual/en/function.in-array.php)
+	 * but additionally works for objects that implement the [[\Traversable]] interface.
+	 * @param mixed $needle The value to look for.
+	 * @param array|\Traversable $haystack The set of values to search.
+	 * @param bool $strict Whether to enable strict (`===`) comparison.
+	 * @return bool `true` if `$needle` was found in `$haystack`, `false` otherwise.
+	 * @throws InvalidParamException if `$haystack` is neither traversable nor an array.
+	 * @see http://php.net/manual/en/function.in-array.php
+	 * @since 2.0.7
+	 */
+	public static function isIn($needle, $haystack, $strict = false)
+	{
+		if ($haystack instanceof \Traversable) {
+			foreach ($haystack as $value) {
+				if ($needle == $value && (!$strict || $needle === $value)) {
+					return true;
+				}
+			}
+		} elseif (is_array($haystack)) {
+			return in_array($needle, $haystack, $strict);
+		} else {
+			throw new InvalidParamException('Argument $haystack must be an array or implement Traversable');
+		}
+		return false;
+	}
 	/**
 	 * Merges two or more arrays into one recursively.
 	 * If each array has an element with the same string key value, the latter
