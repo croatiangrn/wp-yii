@@ -8,6 +8,7 @@ namespace rnd\blog;
 
 use rnd\base\Component;
 use rnd\helpers\ArrayHelper;
+use rnd\helpers\StringHelper;
 use WP_Query;
 
 class Posts extends Component
@@ -43,6 +44,30 @@ class Posts extends Component
 	public function getPosts()
 	{
 		return $this->posts;
+	}
+
+	/**
+	 * @param null $post_id Post ID
+	 * @param bool|int $truncate If a number is given, the string will be truncated to that number of words
+	 *
+	 * @return mixed|string
+	 */
+	public static function yoastOrDefaultTitle( $post_id = null, $truncate = false )
+	{
+		$yoast_title = get_post_meta($post_id, '_yoast_wpseo_title', true);
+		if (strlen( $yoast_title) != 0) {
+			if ($truncate === false) {
+				return $yoast_title;
+			} else {
+				return StringHelper::truncateWords( $yoast_title, $truncate);
+			}
+		}
+
+		if ($truncate === false) {
+			return get_the_title();
+		} else {
+			return StringHelper::truncate( get_the_title(), $truncate);
+		}
 	}
 
 	/**
