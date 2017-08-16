@@ -64,7 +64,7 @@ class Posts extends Component
 		}
 
 		if ($truncate === false) {
-			return get_the_title();
+			return get_the_title() . ' - ' . get_bloginfo('name');
 		} else {
 			return StringHelper::truncateWords( get_the_title(), $truncate);
 		}
