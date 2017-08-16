@@ -66,7 +66,7 @@ class Posts extends Component
 		if ($truncate === false) {
 			return get_the_title();
 		} else {
-			return StringHelper::truncate( get_the_title(), $truncate);
+			return StringHelper::truncateWords( get_the_title(), $truncate);
 		}
 	}
 
