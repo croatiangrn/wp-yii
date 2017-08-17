@@ -47,7 +47,9 @@ class Posts extends Component
 	}
 
 	/**
-	 * @param null $post_id Post ID
+	 * Returns YOAST SEO title or default WP page/post title if former is not set.
+	 *
+	 * @param null|int $post_id Post ID
 	 * @param bool|int $truncate If a number is given, the string will be truncated to that number of words
 	 *
 	 * @return mixed|string
@@ -55,7 +57,7 @@ class Posts extends Component
 	public static function yoastOrDefaultTitle( $post_id = null, $truncate = false )
 	{
 		$yoast_title = get_post_meta($post_id, '_yoast_wpseo_title', true);
-		if (strlen( $yoast_title) != 0) {
+		if ($yoast_title) {
 			if ($truncate === false) {
 				return $yoast_title;
 			} else {
@@ -68,6 +70,23 @@ class Posts extends Component
 		} else {
 			return StringHelper::truncateWords( get_the_title(), $truncate);
 		}
+	}
+
+	/**
+	 * Returns Yoast SEO meta description or null if it's empty.
+	 *
+	 * @param null $post_id Post ID
+	 *
+	 * @return mixed|null
+	 */
+	public static function yoastOrDefaultDescription( $post_id = null )
+	{
+		$yoast_description = get_post_meta( $post_id, '_yoast_wpseo_metadesc', true);
+		if ($yoast_description) {
+			return $yoast_description;
+		}
+
+		return null;
 	}
 
 	/**
