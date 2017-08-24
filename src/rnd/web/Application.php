@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author: Marko Mikulic
  */
@@ -64,19 +66,15 @@ class Application extends \rnd\base\Application
 	/**
 	 * @return string the homepage URL
 	 */
-	public function getHomeUrl()
+	public function getHomeUrl() :string
 	{
-		if ($this->_homeUrl === null) {
-			return $this->getRequest()->getBaseUrl() . '/';
-		} else {
-			return $this->_homeUrl;
-		}
+		return get_home_url();
 	}
 
 	/**
 	 * @param string $value the homepage URL
 	 */
-	public function setHomeUrl($value)
+	public function setHomeUrl(string $value)
 	{
 		$this->_homeUrl = $value;
 	}

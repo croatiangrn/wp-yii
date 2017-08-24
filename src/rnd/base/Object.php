@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -234,7 +236,7 @@ class Object implements Configurable
 	 * @see canGetProperty()
 	 * @see canSetProperty()
 	 */
-	public function hasProperty($name, $checkVars = true)
+	public function hasProperty($name, $checkVars = true) :bool
 	{
 		return $this->canGetProperty($name, $checkVars) || $this->canSetProperty($name, false);
 	}
@@ -252,7 +254,7 @@ class Object implements Configurable
 	 * @return bool whether the property can be read
 	 * @see canSetProperty()
 	 */
-	public function canGetProperty($name, $checkVars = true)
+	public function canGetProperty($name, $checkVars = true) :bool
 	{
 		return method_exists($this, 'get' . $name) || $checkVars && property_exists($this, $name);
 	}

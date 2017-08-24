@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author: Marko Mikulic
  */
@@ -218,7 +220,7 @@ class Component extends Object
 	 * @see canGetProperty()
 	 * @see canSetProperty()
 	 */
-	public function hasProperty($name, $checkVars = true, $checkBehaviors = true)
+	public function hasProperty($name, $checkVars = true, $checkBehaviors = true) :bool
 	{
 		return $this->canGetProperty($name, $checkVars, $checkBehaviors) || $this->canSetProperty($name, false, $checkBehaviors);
 	}
@@ -238,7 +240,7 @@ class Component extends Object
 	 * @return bool whether the property can be read
 	 * @see canSetProperty()
 	 */
-	public function canGetProperty($name, $checkVars = true, $checkBehaviors = true)
+	public function canGetProperty($name, $checkVars = true, $checkBehaviors = true) :bool
 	{
 		if (method_exists($this, 'get' . $name) || $checkVars && property_exists($this, $name)) {
 			return true;
