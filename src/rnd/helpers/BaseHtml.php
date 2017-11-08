@@ -81,7 +81,7 @@ class BaseHtml {
 	 * @see decode()
 	 * @see http://www.php.net/manual/en/function.htmlspecialchars.php
 	 */
-	public static function encode(string $content, bool $doubleEncode = true) :string
+	public static function encode($content, $doubleEncode = true)
 	{
 		return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
 	}
@@ -108,7 +108,7 @@ class BaseHtml {
 	 * into a string with a leading white space (so that it can be directly appended to the tag name
 	 * in a tag. If there is no attribute, an empty string will be returned.
 	 */
-	public static function renderTagAttributes($attributes) :string
+	public static function renderTagAttributes($attributes)
 	{
 		if (count($attributes) > 1) {
 			$sorted = [];
@@ -169,7 +169,7 @@ class BaseHtml {
 	 * @see beginTag()
 	 * @see endTag()
 	 */
-	public static function tag(string $name, string $content = '', array $options = []) :string
+	public static function tag($name, $content = '', array $options = [])
 	{
 		if ($name === null || $name === false) {
 			return $content;
@@ -192,7 +192,7 @@ class BaseHtml {
 	 * and the array values are the corresponding CSS property values.
 	 * @return string the CSS style string. If the CSS style is empty, a null will be returned.
 	 */
-	public static function cssStyleFromArray(array $style) :string
+	public static function cssStyleFromArray(array $style)
 	{
 		$result = '';
 		foreach ($style as $name => $value) {
@@ -217,7 +217,7 @@ class BaseHtml {
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated hyperlink
 	 */
-	public static function a(string $text, string $url = "", array $options = []) :string
+	public static function a($text, $url = "", array $options = [])
 	{
 		if ($url !== null) {
 			$options['href'] = $url;
@@ -232,14 +232,14 @@ class BaseHtml {
 
 	/**
 	 * Generates an image tag.
-	 * @param array|string $src the image URL. This parameter will be processed by [[Url::to()]].
+	 * @param array|$src the image URL. This parameter will be processed by [[Url::to()]].
 	 * @param array $options the tag options in terms of name-value pairs. These will be rendered as
 	 * the attributes of the resulting tag. The values will be HTML-encoded using [[encode()]].
 	 * If a value is null, the corresponding attribute will not be rendered.
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated image tag
 	 */
-	public static function img(string $src, array $options = []) :string
+	public static function img($src, array $options = [])
 	{
 		$options['src'] = $src;
 		if (!isset($options['alt'])) {
@@ -261,7 +261,7 @@ class BaseHtml {
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated mailto link
 	 */
-	public static function mailto(string $text, string $email = "", array $options = []) :string
+	public static function mailto($text, $email = "", array $options = [])
 	{
 		$options['href'] = 'mailto:' . (empty($email) === true ? $text : $email);
 		return static::tag('a', $text, $options);
@@ -278,7 +278,7 @@ class BaseHtml {
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated input tag
 	 */
-	public static function input(string $type, string $name = "", string $value = "", array $options = []) :string
+	public static function input($type, $name = "", $value = "", array $options = [])
 	{
 		if (!isset($options['type'])) {
 			$options['type'] = $type;
@@ -300,7 +300,7 @@ class BaseHtml {
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated button tag
 	 */
-	public static function button(string $content = 'Button', array $options = []) :string
+	public static function button($content = 'Button', array $options = [])
 	{
 		if (!isset($options['type'])) {
 			$options['type'] = 'button';
@@ -323,7 +323,7 @@ class BaseHtml {
 	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
 	 * @return string the generated submit button tag
 	 */
-	public static function submitButton(string $content = 'Submit', array $options = []) :string
+	public static function submitButton($content = 'Submit', array $options = [])
 	{
 		$options['type'] = 'submit';
 		return static::button($content, $options);
