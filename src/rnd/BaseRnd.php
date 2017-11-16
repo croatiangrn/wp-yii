@@ -396,7 +396,7 @@ class BaseRnd
 	 * [[\yii\base\Application::language|application language]] will be used.
 	 * @return string the translated message.
 	 */
-	public static function t($category, $message, $params = [], $language = null)
+	public static function t($message, $category = 'app', $params = [], $language = null)
 	{
 		if (static::$app !== null) {
 			return static::$app->getI18n()->translate($category, $message, $params, $language ?: static::$app->language);
