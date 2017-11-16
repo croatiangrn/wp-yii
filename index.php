@@ -1,3 +1,4 @@
 <?php
-declare(strict_types=1);
-var_dump( Rnd::$app->getHomeUrl());
+var_dump( Rnd::t( 'app', 'Test'));
+var_dump( Rnd::$app->language);
+var_dump( Rnd::getAlias( '@themeroot'));

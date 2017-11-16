@@ -254,4 +254,13 @@ abstract class Application extends Module
 	{
 		return $this->get('response');
 	}
+
+	/**
+	 * Returns the internationalization (i18n) component.
+	 * @return \rnd\i18n\I18N the internationalization application component.
+	 */
+	public function getI18n()
+	{
+		return $this->get('i18n');
+	}
 }
