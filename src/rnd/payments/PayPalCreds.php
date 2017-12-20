@@ -3,25 +3,28 @@
  * @author: Marko Mikulic
  */
 
-namespace App\payments;
+namespace rnd\payments;
 
 
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
+use rnd\base\Component;
 
-class PayPalCreds {
-	static $clientID = '';
-	static $clientSecret = '';
+class PayPalCreds extends Component {
+	public $clientID = '';
+	public $clientSecret = '';
+	public $mode = 'debug';
 
-	public static function getCredentials($mode = 'debug') {
+
+	public function getCredentials() {
 		$obj =  new ApiContext(
 			new OAuthTokenCredential(
-				static::$clientID,
-				static::$clientSecret
+				$this->clientID,
+				$this->clientSecret
 			)
 		);
 
-		if ($mode === 'debug')
+		if ($this->mode === 'debug')
 		{
 			$obj->setConfig([
 				'mode' => 'sandbox',

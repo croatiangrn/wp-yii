@@ -15,6 +15,7 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentOptions;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
+use rnd\payments\PayPalCreds;
 use rnd\web\Session;
 
 abstract class Checkout
@@ -28,7 +29,8 @@ abstract class Checkout
 
 	private function payDefault() {
 		$cart = new Cart();
-		$paypal = PayPalCreds::getCredentials();
+		$payPalCreds = new PayPalCreds();
+		$paypal = $payPalCreds->getCredentials();
 		$payer  = new Payer();
 		$payer->setPaymentMethod( 'paypal' );
 
