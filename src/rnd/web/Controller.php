@@ -9,12 +9,22 @@ namespace rnd\web;
 use Rnd;
 use rnd\base\Component;
 use rnd\base\InvalidParamException;
+use rnd\base\Module;
 use rnd\helpers\ArrayHelper;
 use rnd\helpers\Inflector;
 use rnd\widgets\NavWalker;
 
 class Controller extends Component
 {
+
+	/**
+	 * @var string the ID of this controller.
+	 */
+	public $id;
+	/**
+	 * @var Module the module that this controller belongs to.
+	 */
+	public $module;
 	/**
 	 * Template sections
 	 * @var array $sections
@@ -332,5 +342,23 @@ class Controller extends Component
 		if ( $renderFooter ) {
 			$this->renderFooter();
 		}
+	}
+
+	/**
+	 * Returns the unique ID of the controller.
+	 * @return string the controller ID that is prefixed with the module ID (if any).
+	 */
+	public function getUniqueId()
+	{
+		return $this->module instanceof Application ? $this->id : $this->module->getUniqueId() . '/' . $this->id;
+	}
+
+	/**
+	 * Returns the route of the current request.
+	 * @return string the route (module ID, controller ID and action ID) of the current request.
+	 */
+	public function getRoute()
+	{
+		return $this->getUniqueId();
 	}
 }

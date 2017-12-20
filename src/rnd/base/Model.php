@@ -8,6 +8,11 @@ namespace rnd\base;
 
 use ReflectionClass;
 
+/**
+ * Class Model
+ * @package rnd\base
+ * @deprecated
+ */
 class Model extends Object {
 	protected $safeAttributes = [];
 

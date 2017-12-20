@@ -106,6 +106,7 @@ class MessageSource extends Component
 		if (!isset($this->_messages[$key])) {
 			$this->_messages[$key] = $this->loadMessages($category, $language);
 		}
+
 		if (isset($this->_messages[$key][$message]) && $this->_messages[$key][$message] !== '') {
 			return $this->_messages[$key][$message];
 		} elseif ($this->hasEventHandlers(self::EVENT_MISSING_TRANSLATION)) {

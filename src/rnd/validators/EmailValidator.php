@@ -6,16 +6,11 @@
 namespace rnd\validators;
 
 
-use rnd\base\Component;
+use Rnd;
 use rnd\base\InvalidConfigException;
 
-class EmailValidator extends Component
+class EmailValidator extends Validator
 {
-	/**
-	 * @var bool whether to allow name in the email address (e.g. "John Smith <john.smith@example.com>"). Defaults to false.
-	 * @see fullPattern
-	 */
-	public $allowName = false;
 	/**
 	 * @var string the regular expression used to validate the attribute value.
 	 * @see http://www.regular-expressions.info/email.html
@@ -28,26 +23,43 @@ class EmailValidator extends Component
 	 */
 	public $fullPattern = '/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/';
 	/**
-	 * @var bool whether validation process should take into account IDN (internationalized domain
-	 * names). Defaults to false meaning that validation of emails containing IDN will always fail.
-	 * Note that in order to use IDN validation you have to install and enable `intl` PHP extension,
-	 * otherwise an exception would be thrown.
+	 * @var bool whether to allow name in the email address (e.g. "John Smith <john.smith@example.com>"). Defaults to false.
+	 * @see fullPattern
 	 */
-	public $enableIDN = false;
+	public $allowName = false;
 	/**
 	 * @var bool whether to check whether the email's domain exists and has either an A or MX record.
 	 * Be aware that this check can fail due to temporary DNS problems even if the email address is
 	 * valid and an email would be deliverable. Defaults to false.
 	 */
 	public $checkDNS = false;
+	/**
+	 * @var bool whether validation process should take into account IDN (internationalized domain
+	 * names). Defaults to false meaning that validation of emails containing IDN will always fail.
+	 * Note that in order to use IDN validation you have to install and enable `intl` PHP extension,
+	 * otherwise an exception would be thrown.
+	 */
+	public $enableIDN = false;
+
+
+	/**
+	 * @inheritdoc
+	 */
 	public function init()
 	{
+		parent::init();
 		if ($this->enableIDN && !function_exists('idn_to_ascii')) {
 			throw new InvalidConfigException('In order to use IDN validation intl extension must be installed and enabled.');
 		}
+		if ($this->message === null) {
+			$this->message = Rnd::t('{attribute} is not a valid email address.', 'rnd');
+		}
 	}
 
-	public function validateValue($value)
+	/**
+	 * @inheritdoc
+	 */
+	protected function validateValue($value)
 	{
 		if (!is_string($value)) {
 			$valid = false;
@@ -55,10 +67,11 @@ class EmailValidator extends Component
 			$valid = false;
 		} else {
 			if ($this->enableIDN) {
-				$matches['local'] = idn_to_ascii($matches['local']);
-				$matches['domain'] = idn_to_ascii($matches['domain']);
+				$matches['local'] = $this->idnToAscii($matches['local']);
+				$matches['domain'] = $this->idnToAscii($matches['domain']);
 				$value = $matches['name'] . $matches['open'] . $matches['local'] . '@' . $matches['domain'] . $matches['close'];
 			}
+
 			if (strlen($matches['local']) > 64) {
 				// The maximum total length of a user name or other local-part is 64 octets. RFC 5322 section 4.5.3.1.1
 				// http://tools.ietf.org/html/rfc5321#section-4.5.3.1.1
@@ -78,6 +91,18 @@ class EmailValidator extends Component
 				}
 			}
 		}
-		return $valid;
+
+		return $valid ? null : [$this->message, []];
+	}
+
+
+	private function idnToAscii($idn)
+	{
+		if (PHP_VERSION_ID < 50600) {
+			// TODO: drop old PHP versions support
+			return idn_to_ascii($idn);
+		}
+
+		return idn_to_ascii($idn, 0, INTL_IDNA_VARIANT_UTS46);
 	}
 }

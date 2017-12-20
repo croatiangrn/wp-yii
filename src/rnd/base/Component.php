@@ -71,11 +71,14 @@ class Component extends Object
 	 *
 	 * Do not call this method directly as it is a PHP magic method that
 	 * will be implicitly called when executing `$component->property = $value;`.
-	 * @param string $name the property name or the event name
-	 * @param mixed $value the property value
+	 *
+	 * @param string $name  the property name or the event name
+	 * @param mixed  $value the property value
+	 *
 	 * @throws UnknownPropertyException if the property is not defined
 	 * @throws InvalidCallException if the property is read-only.
 	 * @see __get()
+	 * @throws InvalidConfigException
 	 */
 	public function __set($name, $value)
 	{
@@ -483,7 +486,8 @@ class Component extends Object
 	 * This method will create the behavior object based on the given
 	 * configuration. After that, the behavior object will be attached to
 	 * this component by calling the [[Behavior::attach()]] method.
-	 * @param string $name the name of the behavior.
+	 *
+	 * @param string                $name     the name of the behavior.
 	 * @param string|array|Behavior $behavior the behavior configuration. This can be one of the following:
 	 *
 	 *  - a [[Behavior]] object
@@ -492,6 +496,7 @@ class Component extends Object
 	 *
 	 * @return Behavior the behavior object
 	 * @see detachBehavior()
+	 * @throws InvalidConfigException
 	 */
 	public function attachBehavior($name, $behavior)
 	{
@@ -503,8 +508,11 @@ class Component extends Object
 	 * Attaches a list of behaviors to the component.
 	 * Each behavior is indexed by its name and should be a [[Behavior]] object,
 	 * a string specifying the behavior class, or an configuration array for creating the behavior.
+	 *
 	 * @param array $behaviors list of behaviors to be attached to the component
+	 *
 	 * @see attachBehavior()
+	 * @throws InvalidConfigException
 	 */
 	public function attachBehaviors($behaviors)
 	{
@@ -517,8 +525,11 @@ class Component extends Object
 	/**
 	 * Detaches a behavior from the component.
 	 * The behavior's [[Behavior::detach()]] method will be invoked.
+	 *
 	 * @param string $name the behavior's name.
+	 *
 	 * @return null|Behavior the detached behavior. Null if the behavior does not exist.
+	 * @throws InvalidConfigException
 	 */
 	public function detachBehavior($name)
 	{
@@ -535,6 +546,7 @@ class Component extends Object
 
 	/**
 	 * Detaches all behaviors from the component.
+	 * @throws InvalidConfigException
 	 */
 	public function detachBehaviors()
 	{
@@ -546,6 +558,7 @@ class Component extends Object
 
 	/**
 	 * Makes sure that the behaviors declared in [[behaviors()]] are attached to this component.
+	 * @throws InvalidConfigException
 	 */
 	public function ensureBehaviors()
 	{
@@ -559,16 +572,19 @@ class Component extends Object
 
 	/**
 	 * Attaches a behavior to this component.
-	 * @param string|int $name the name of the behavior. If this is an integer, it means the behavior
-	 * is an anonymous one. Otherwise, the behavior is a named one and any existing behavior with the same name
-	 * will be detached first.
+	 *
+	 * @param string|int            $name     the name of the behavior. If this is an integer, it means the behavior
+	 *                                        is an anonymous one. Otherwise, the behavior is a named one and any
+	 *                                        existing behavior with the same name will be detached first.
 	 * @param string|array|Behavior $behavior the behavior to be attached
+	 *
 	 * @return Behavior the attached behavior.
+	 * @throws InvalidConfigException
 	 */
 	private function attachBehaviorInternal($name, $behavior)
 	{
 		if (!($behavior instanceof Behavior)) {
-			$behavior = Yii::createObject($behavior);
+			$behavior = Rnd::createObject($behavior);
 		}
 		if (is_int($name)) {
 			$behavior->attach($this);

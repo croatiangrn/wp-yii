@@ -106,7 +106,7 @@ class RndRequirementsChecker
 	 * Performs the check for the Yii core requirements.
 	 * @return RndRequirementsChecker self instance.
 	 */
-	public function checkYii()
+	public function checkRnd()
 	{
 		return $this->check(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'requirements.php');
 	}
@@ -148,9 +148,9 @@ class RndRequirementsChecker
 	 */
 	function render()
 	{
-		/*if (!isset($this->result)) {
+		if (!isset($this->result)) {
 			$this->usageError('Nothing to render!');
-		}*/
+		}
 		$baseViewFilePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'views';
 		if (!empty($_SERVER['argv'])) {
 			$viewFileName = $baseViewFilePath . DIRECTORY_SEPARATOR . 'console' . DIRECTORY_SEPARATOR . 'index.php';

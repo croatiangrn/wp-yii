@@ -13,7 +13,7 @@ abstract class Application extends Module
 	/**
 	 * @var string the application name.
 	 */
-	public $name = 'My Application';
+	public $name = 'WP-Yii Application';
 	/**
 	 * @var string the charset currently used for the application.
 	 */
@@ -24,13 +24,13 @@ abstract class Application extends Module
 	 * for English, while `en-US` stands for English (United States).
 	 * @see sourceLanguage
 	 */
-	public $language = 'en-US';
+	public $language = 'hr-HR';
 	/**
 	 * @var string the language that the application is written in. This mainly refers to
 	 * the language that the messages and view files are written in.
 	 * @see language
 	 */
-	public $sourceLanguage = 'en-US';
+	public $sourceLanguage = 'hr-HR';
 	/**
 	 * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
 	 *
