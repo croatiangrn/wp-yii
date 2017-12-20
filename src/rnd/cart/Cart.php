@@ -6,8 +6,6 @@
 namespace rnd\cart;
 use Rnd;
 use rnd\base\Component;
-use rnd\base\InvalidParamException;
-
 
 /**
  * Class Cart provides basic cart functionality (adding, removing, clearing, listing items). You can extend this class and
@@ -20,14 +18,14 @@ class Cart extends Component
 	/**
 	 * @var string CartItemInterface class name
 	 */
-	const ITEM_PRODUCT = '\App\cart\CartItemInterface';
+	const ITEM_PRODUCT = '\rnd\cart\CartItemInterface';
 
 	/**
 	 * Override this to provide custom (e.g. database) storage for cart data
 	 *
 	 * @var StorageInterface
 	 */
-	public $storageClass = '\App\cart\SessionStorage';
+	public $storageClass = '\rnd\cart\SessionStorage';
 
 	/**
 	 * @var array cart items
