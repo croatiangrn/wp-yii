@@ -6,7 +6,9 @@
 namespace rnd\web;
 
 
+use rnd\base\Exception;
 use rnd\base\InvalidConfigException;
+use rnd\validators\IpValidator;
 
 class Request
 {
@@ -19,6 +21,26 @@ class Request
 	 */
 	public $methodParam = '_method';
 
+	/**
+	 * @var HeaderCollection Collection of request headers.
+	 */
+	private $_headers;
+
+	/**
+	 * @var array lists of headers that are, by default, subject to the trusted host configuration.
+	 * These headers will be filtered unless explicitly allowed in [[trustedHosts]].
+	 * The match of header names is case-insensitive.
+	 * @see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+	 * @see $trustedHosts
+	 * @since 2.0.13
+	 */
+	public $secureHeaders = [
+		'X-Forwarded-For',
+		'X-Forwarded-Host',
+		'X-Forwarded-Proto',
+		'Front-End-Https',
+		'X-Rewrite-Url',
+	];
 
 	/**
 	 * Returns the method of the current request (e.g. GET, POST, HEAD, PUT, PATCH, DELETE).
@@ -106,6 +128,27 @@ class Request
 	}
 
 	/**
+	 * Returns the URL origin of a CORS request.
+	 *
+	 * The return value is taken from the `Origin` [[getHeaders()|header]] sent by the browser.
+	 *
+	 * Note that the origin request header indicates where a fetch originates from.
+	 * It doesn't include any path information, but only the server name.
+	 * It is sent with a CORS requests, as well as with POST requests.
+	 * It is similar to the referer header, but, unlike this header, it doesn't disclose the whole path.
+	 * Please refer to <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin> for more information.
+	 *
+	 * @return string|null URL origin of a CORS request, `null` if not available.
+	 * @see getHeaders()
+	 * @since 2.0.13
+	 */
+	public function getOrigin()
+	{
+		return $this->getHeaders()->get('origin');
+	}
+
+
+	/**
 	 * Returns whether this is an AJAX (XMLHttpRequest) request.
 	 *
 	 * Note that jQuery doesn't set the header in case of cross domain
@@ -116,6 +159,17 @@ class Request
 	public function getIsAjax()
 	{
 		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+	}
+
+	/**
+	 * Returns whether this is a PJAX request.
+	 * @return bool whether this is a PJAX request
+	 *
+	 * @throws \Exception
+	 */
+	public function getIsPjax()
+	{
+		return $this->getIsAjax() && $this->getHeaders()->has('X-Pjax');
 	}
 
 	/**
@@ -211,6 +265,7 @@ class Request
 	 * Returns the currently requested absolute URL.
 	 * This is a shortcut to the concatenation of [[hostInfo]] and [[url]].
 	 * @return string the currently requested absolute URL.
+	 * @throws InvalidConfigException
 	 */
 	public function getAbsoluteUrl()
 	{
@@ -281,6 +336,101 @@ class Request
 
 		return $this->_securePort;
 	}
+
+	/**
+	 * Returns the header collection.
+	 * The header collection contains incoming HTTP headers.
+	 * @return HeaderCollection the header collection
+	 * @throws \Exception
+	 */
+	public function getHeaders()
+	{
+		if ($this->_headers === null) {
+			$this->_headers = new HeaderCollection();
+			if (function_exists('getallheaders')) {
+				$headers = getallheaders();
+				foreach ($headers as $name => $value) {
+					$this->_headers->add($name, $value);
+				}
+			} elseif (function_exists('http_get_request_headers')) {
+				$headers = http_get_request_headers();
+				foreach ($headers as $name => $value) {
+					$this->_headers->add($name, $value);
+				}
+			} else {
+				foreach ($_SERVER as $name => $value) {
+					if (strncmp($name, 'HTTP_', 5) === 0) {
+						$name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+						$this->_headers->add($name, $value);
+					}
+				}
+			}
+			$this->filterHeaders($this->_headers);
+		}
+
+		return $this->_headers;
+	}
+
+	/**
+	 * Filters headers according to the [[trustedHosts]].
+	 * @param HeaderCollection $headerCollection
+	 * @since 2.0.13
+	 * @throws \Exception
+	 */
+	protected function filterHeaders(HeaderCollection $headerCollection)
+	{
+		// do not trust any of the [[secureHeaders]] by default
+		$trustedHeaders = [];
+
+		// check if the client is a trusted host
+		if (!empty($this->trustedHosts)) {
+			$validator = $this->getIpValidator();
+			$ip = $this->getRemoteIP();
+			foreach ($this->trustedHosts as $cidr => $headers) {
+				if (!is_array($headers)) {
+					$cidr = $headers;
+					$headers = $this->secureHeaders;
+				}
+				$validator->setRanges($cidr);
+				if ($validator->validate($ip)) {
+					$trustedHeaders = $headers;
+					break;
+				}
+			}
+		}
+
+		// filter all secure headers unless they are trusted
+		foreach ($this->secureHeaders as $secureHeader) {
+			if (!in_array($secureHeader, $trustedHeaders)) {
+				$headerCollection->remove($secureHeader);
+			}
+		}
+	}
+
+	/**
+	 * Returns the IP on the other end of this connection.
+	 * This is always the next hop, any headers are ignored.
+	 * @return string|null remote IP address, `null` if not available.
+	 * @since 2.0.13
+	 */
+	public function getRemoteIP()
+	{
+		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+	}
+
+	/**
+	 * Creates instance of [[IpValidator]].
+	 * You can override this method to adjust validator or implement different matching strategy.
+	 *
+	 * @return IpValidator
+	 * @since 2.0.13
+	 */
+	protected function getIpValidator()
+	{
+		return new IpValidator();
+	}
+
+
 
 	private $_port;
 
@@ -443,7 +593,6 @@ class Request
 	 * If no parsers are configured for the current [[contentType]] it uses the PHP function `mb_parse_str()`
 	 * to parse the [[rawBody|request body]].
 	 * @return array the request parameters given in the request body.
-	 * @throws InvalidConfigException if a registered parser does not implement the [[RequestParserInterface]].
 	 * @see getMethod()
 	 * @see getBodyParam()
 	 * @see setBodyParams()
@@ -572,6 +721,7 @@ class Request
 	 * and the ending slashes are removed.
 	 * @return string the relative URL for the application
 	 * @see setScriptUrl()
+	 * @throws InvalidConfigException
 	 */
 	public function getBaseUrl()
 	{

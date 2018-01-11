@@ -81,6 +81,16 @@ class Session extends Object
 	}
 
 	/**
+	 * Gets the session ID.
+	 * This is a wrapper for [PHP session_id()](http://php.net/manual/en/function.session-id.php).
+	 * @return string the current session ID
+	 */
+	public function getId()
+	{
+		return session_id();
+	}
+
+	/**
 	 * Returns the session variable value with the session variable name.
 	 * If the session variable does not exist, the `$defaultValue` will be returned.
 	 * @param string $key the session variable name

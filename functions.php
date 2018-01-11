@@ -9,6 +9,20 @@ require (__DIR__ . '/src/rnd/Rnd.php');
 $config = [
 	'id' => 'My App',
 	'name' => get_bloginfo('name'),
+	/*'aliases' => [
+		'@app' => __DIR__
+	],
+	'components' => [
+		'i18n' => [
+			'translations' => [
+				'app*' => [
+					'class' => 'rnd\i18n\PhpMessageSource',
+					'sourceLanguage' => 'en-US',
+					'basePath' => '@app/messages',
+				]
+			]
+		]
+	]*/
 ];
 $config = \rnd\helpers\ArrayHelper::merge(
 	require(__DIR__ . '/src/rnd/config.php'),

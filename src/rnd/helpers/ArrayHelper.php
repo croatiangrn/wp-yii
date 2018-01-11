@@ -314,4 +314,155 @@ class ArrayHelper
 			return $default;
 		}
 	}
+
+	/**
+	 * Filters array according to rules specified.
+	 *
+	 * For example:
+	 *
+	 * ```php
+	 * $array = [
+	 *     'A' => [1, 2],
+	 *     'B' => [
+	 *         'C' => 1,
+	 *         'D' => 2,
+	 *     ],
+	 *     'E' => 1,
+	 * ];
+	 *
+	 * $result = \yii\helpers\ArrayHelper::filter($array, ['A']);
+	 * // $result will be:
+	 * // [
+	 * //     'A' => [1, 2],
+	 * // ]
+	 *
+	 * $result = \yii\helpers\ArrayHelper::filter($array, ['A', 'B.C']);
+	 * // $result will be:
+	 * // [
+	 * //     'A' => [1, 2],
+	 * //     'B' => ['C' => 1],
+	 * // ]
+	 *
+	 * $result = \yii\helpers\ArrayHelper::filter($array, ['B', '!B.C']);
+	 * // $result will be:
+	 * // [
+	 * //     'B' => ['D' => 2],
+	 * // ]
+	 * ```
+	 *
+	 * @param array $array Source array
+	 * @param array $filters Rules that define array keys which should be left or removed from results.
+	 * Each rule is:
+	 * - `var` - `$array['var']` will be left in result.
+	 * - `var.key` = only `$array['var']['key'] will be left in result.
+	 * - `!var.key` = `$array['var']['key'] will be removed from result.
+	 * @return array Filtered array
+	 * @since 2.0.9
+	 */
+	public static function filter($array, $filters)
+	{
+		$result = [];
+		$forbiddenVars = [];
+
+		foreach ($filters as $var) {
+			$keys = explode('.', $var);
+			$globalKey = $keys[0];
+			$localKey = isset($keys[1]) ? $keys[1] : null;
+
+			if ($globalKey[0] === '!') {
+				$forbiddenVars[] = [
+					substr($globalKey, 1),
+					$localKey,
+				];
+				continue;
+			}
+
+			if (!key_exists($globalKey, $array)) {
+				continue;
+			}
+			if ($localKey === null) {
+				$result[$globalKey] = $array[$globalKey];
+				continue;
+			}
+			if (!isset($array[$globalKey][$localKey])) {
+				continue;
+			}
+			if (!array_key_exists($globalKey, $result)) {
+				$result[$globalKey] = [];
+			}
+			$result[$globalKey][$localKey] = $array[$globalKey][$localKey];
+		}
+
+		foreach ($forbiddenVars as $var) {
+			list($globalKey, $localKey) = $var;
+			if (array_key_exists($globalKey, $result)) {
+				unset($result[$globalKey][$localKey]);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Returns a value indicating whether the given array is an associative array.
+	 *
+	 * An array is associative if all its keys are strings. If `$allStrings` is false,
+	 * then an array will be treated as associative if at least one of its keys is a string.
+	 *
+	 * Note that an empty array will NOT be considered associative.
+	 *
+	 * @param array $array the array being checked
+	 * @param bool $allStrings whether the array keys must be all strings in order for
+	 * the array to be treated as associative.
+	 * @return bool whether the array is associative
+	 */
+	public static function isAssociative($array, $allStrings = true)
+	{
+		if (!is_array($array) || empty($array)) {
+			return false;
+		}
+
+		if ($allStrings) {
+			foreach ($array as $key => $value) {
+				if (!is_string($key)) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		foreach ($array as $key => $value) {
+			if (is_string($key)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the given array contains the specified key.
+	 * This method enhances the `array_key_exists()` function by supporting case-insensitive
+	 * key comparison.
+	 * @param string $key the key to check
+	 * @param array $array the array with keys to check
+	 * @param bool $caseSensitive whether the key comparison should be case-sensitive
+	 * @return bool whether the array contains the specified key
+	 */
+	public static function keyExists($key, $array, $caseSensitive = true)
+	{
+		if ($caseSensitive) {
+			// Function `isset` checks key faster but skips `null`, `array_key_exists` handles this case
+			// http://php.net/manual/en/function.array-key-exists.php#107786
+			return isset($array[$key]) || array_key_exists($key, $array);
+		}
+		foreach (array_keys($array) as $k) {
+			if (strcasecmp($key, $k) === 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

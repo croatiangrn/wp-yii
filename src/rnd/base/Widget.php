@@ -15,7 +15,7 @@ use Rnd;
  * For more details and usage information on Widget, see the [guide article on widgets](guide:structure-widgets).
  *
  * @property string $id ID of the widget.
- * @property \rnd\web\View $view The view object that can be used to render views or view files. Note that the
+ * @property \rnd\base\View $view The view object that can be used to render views or view files. Note that the
  * type of this property differs in getter and setter. See [[getView()]] and [[setView()]] for details.
  * @property string $viewPath The directory containing the view files for this widget. This property is
  * read-only.
@@ -182,7 +182,7 @@ class Widget extends Component implements ViewContextInterface
 	 * The [[render()]] and [[renderFile()]] methods will use
 	 * this view object to implement the actual view rendering.
 	 * If not set, it will default to the "view" application component.
-	 * @return \rnd\web\View the view object that can be used to render views or view files.
+	 * @return \rnd\base\View the view object that can be used to render views or view files.
 	 */
 	public function getView()
 	{

@@ -9,6 +9,7 @@ use rnd\base\InvalidConfigException;
 use rnd\base\InvalidParamException;
 use rnd\base\UnknownClassException;
 use rnd\di\Container;
+use rnd\log\Logger;
 
 defined('RND_BEGIN_TIME') or define('RND_BEGIN_TIME', microtime(true));
 /**
@@ -331,6 +332,49 @@ class BaseRnd
 		}
 
 		throw new InvalidConfigException('Unsupported configuration type: ' . gettype($type));
+	}
+
+	/**
+	 * Logs an informative message.
+	 * An informative message is typically logged by an application to keep record of
+	 * something important (e.g. an administrator logs in).
+	 * @param string|array $message the message to be logged. This can be a simple string or a more
+	 * complex data structure, such as array.
+	 * @param string $category the category of the message.
+	 * @throws InvalidConfigException
+	 */
+	public static function info($message, $category = 'application')
+	{
+		static::getLogger()->log($message, Logger::LEVEL_INFO, $category);
+	}
+
+	private static $_logger;
+
+	/**
+	 * @return object|Logger message logger
+	 * @throws InvalidConfigException
+	 */
+	public static function getLogger()
+	{
+		if (self::$_logger !== null) {
+			return self::$_logger;
+		}
+
+		return self::$_logger = static::createObject('yii\log\Logger');
+	}
+
+	/**
+	 * Logs an error message.
+	 * An error message is typically logged when an unrecoverable error occurs
+	 * during the execution of an application.
+	 * @param string|array $message the message to be logged. This can be a simple string or a more
+	 * complex data structure, such as array.
+	 * @param string $category the category of the message.
+	 * @throws InvalidConfigException
+	 */
+	public static function error($message, $category = 'application')
+	{
+		static::getLogger()->log($message, Logger::LEVEL_ERROR, $category);
 	}
 
 	/**

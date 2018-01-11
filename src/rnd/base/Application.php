@@ -24,13 +24,13 @@ abstract class Application extends Module
 	 * for English, while `en-US` stands for English (United States).
 	 * @see sourceLanguage
 	 */
-	public $language = 'hr-HR';
+	public $language = 'en-US';
 	/**
 	 * @var string the language that the application is written in. This mainly refers to
 	 * the language that the messages and view files are written in.
 	 * @see language
 	 */
-	public $sourceLanguage = 'hr-HR';
+	public $sourceLanguage = 'en-US';
 	/**
 	 * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
 	 *
