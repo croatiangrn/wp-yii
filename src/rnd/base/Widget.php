@@ -225,10 +225,12 @@ class Widget extends Component implements ViewContextInterface
 	 *
 	 * If the view name does not contain a file extension, it will use the default one `.php`.
 	 *
-	 * @param string $view the view name.
-	 * @param array $params the parameters (name-value pairs) that should be made available in the view.
+	 * @param string $view   the view name.
+	 * @param array  $params the parameters (name-value pairs) that should be made available in the view.
+	 *
 	 * @return string the rendering result.
-	 * @throws InvalidParamException if the view file does not exist.
+	 * @throws \Exception
+	 * @throws \Throwable
 	 */
 	public function render($view, $params = [])
 	{
@@ -237,10 +239,13 @@ class Widget extends Component implements ViewContextInterface
 
 	/**
 	 * Renders a view file.
-	 * @param string $file the view file to be rendered. This can be either a file path or a [path alias](guide:concept-aliases).
-	 * @param array $params the parameters (name-value pairs) that should be made available in the view.
+	 *
+	 * @param string $file   the view file to be rendered. This can be either a file path or a [path alias](guide:concept-aliases).
+	 * @param array  $params the parameters (name-value pairs) that should be made available in the view.
+	 *
 	 * @return string the rendering result.
-	 * @throws InvalidParamException if the view file does not exist.
+	 * @throws \Exception
+	 * @throws \Throwable
 	 */
 	public function renderFile($file, $params = [])
 	{

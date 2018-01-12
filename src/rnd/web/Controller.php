@@ -10,7 +10,9 @@ use Rnd;
 use rnd\base\Component;
 use rnd\base\InvalidParamException;
 use rnd\base\Module;
+use rnd\base\ViewNotFoundException;
 use rnd\helpers\ArrayHelper;
+use rnd\helpers\FileHelper;
 use rnd\helpers\Inflector;
 use rnd\widgets\NavWalker;
 
@@ -342,6 +344,51 @@ class Controller extends Component
 		if ( $renderFooter ) {
 			$this->renderFooter();
 		}
+	}
+
+	/**
+	 * @var array the view files currently being rendered. There may be multiple view files being
+	 * rendered at a moment because one view may be rendered within another.
+	 */
+	private $_viewFiles = [];
+
+	/**
+	 * Renders a view file.
+	 *
+	 * If [[theme]] is enabled (not null), it will try to render the themed version of the view file as long
+	 * as it is available.
+	 *
+	 * The method will call [[FileHelper::localize()]] to localize the view file.
+	 *
+	 * If [[renderers|renderer]] is enabled (not null), the method will use it to render the view file.
+	 * Otherwise, it will simply include the view file as a normal PHP file, capture its output and
+	 * return it as a string.
+	 *
+	 * @param string $viewFile the view file. This can be either an absolute file path or an alias of it.
+	 * @param array  $params   the parameters (name-value pairs) that will be extracted and made available in the view file.
+	 * @param object $context  the context that the view should use for rendering the view. If null,
+	 *                         existing [[context]] will be used.
+	 *
+	 * @return string the rendering result
+	 * @throws \Exception
+	 * @throws \Throwable
+	 */
+	public function renderPartial($viewFile, $params = [], $context = null)
+	{
+		$viewFile = Rnd::getAlias($viewFile);
+
+		if (is_file($viewFile)) {
+			$viewFile = FileHelper::localize($viewFile);
+		} else {
+			throw new ViewNotFoundException("The view file does not exist: $viewFile");
+		}
+
+		$this->_viewFiles[] = $viewFile;
+		$output = $this->renderPhpFile($viewFile, $params);
+
+		array_pop($this->_viewFiles);
+
+		return $output;
 	}
 
 	/**
