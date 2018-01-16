@@ -152,5 +152,5 @@ class Security extends Component
 		$bytes = $this->generateRandomKey($length);
 		return substr(StringHelper::base64UrlEncode($bytes), 0, $length);
 	}
-	
+
 }
