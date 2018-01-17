@@ -429,6 +429,67 @@ class BaseHtml {
 	}
 
 	/**
+	 * Generates a radio button input.
+	 * @param string $name the name attribute.
+	 * @param bool $checked whether the radio button should be checked.
+	 * @param array $options the tag options in terms of name-value pairs.
+	 * See [[booleanInput()]] for details about accepted attributes.
+	 *
+	 * @return string the generated radio button tag
+	 */
+	public static function radio($name, $checked = false, $options = [])
+	{
+		return static::booleanInput('radio', $name, $checked, $options);
+	}
+
+	/**
+	 * Generates a boolean input.
+	 * @param string $type the input type. This can be either `radio` or `checkbox`.
+	 * @param string $name the name attribute.
+	 * @param bool $checked whether the checkbox should be checked.
+	 * @param array $options the tag options in terms of name-value pairs. The following options are specially handled:
+	 *
+	 * - uncheck: string, the value associated with the uncheck state of the checkbox. When this attribute
+	 *   is present, a hidden input will be generated so that if the checkbox is not checked and is submitted,
+	 *   the value of this attribute will still be submitted to the server via the hidden input.
+	 * - label: string, a label displayed next to the checkbox.  It will NOT be HTML-encoded. Therefore you can pass
+	 *   in HTML code such as an image tag. If this is is coming from end users, you should [[encode()]] it to prevent XSS attacks.
+	 *   When this option is specified, the checkbox will be enclosed by a label tag.
+	 * - labelOptions: array, the HTML attributes for the label tag. Do not set this option unless you set the "label" option.
+	 *
+	 * The rest of the options will be rendered as the attributes of the resulting checkbox tag. The values will
+	 * be HTML-encoded using [[encode()]]. If a value is null, the corresponding attribute will not be rendered.
+	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
+	 *
+	 * @return string the generated checkbox tag
+	 * @since 2.0.9
+	 */
+	protected static function booleanInput($type, $name, $checked = false, $options = [])
+	{
+		$options['checked'] = (bool) $checked;
+		$value = array_key_exists('value', $options) ? $options['value'] : '1';
+		if (isset($options['uncheck'])) {
+			// add a hidden field so that if the checkbox is not selected, it still submits a value
+			$hiddenOptions = [];
+			if (isset($options['form'])) {
+				$hiddenOptions['form'] = $options['form'];
+			}
+			$hidden = static::hiddenInput($name, $options['uncheck'], $hiddenOptions);
+			unset($options['uncheck']);
+		} else {
+			$hidden = '';
+		}
+		if (isset($options['label'])) {
+			$label = $options['label'];
+			$labelOptions = isset($options['labelOptions']) ? $options['labelOptions'] : [];
+			unset($options['label'], $options['labelOptions']);
+			$content = static::label(static::input($type, $name, $value, $options) . ' ' . $label, null, $labelOptions);
+			return $hidden . $content;
+		}
+		return $hidden . static::input($type, $name, $value, $options);
+	}
+
+	/**
 	 * Renders the option tags that can be used by [[dropDownList()]] and [[listBox()]].
 	 * @param string|array|null $selection the selected value(s). String for single or array for multiple selection(s).
 	 * @param array $items the option data items. The array keys are option values, and the array values
@@ -551,6 +612,72 @@ class BaseHtml {
 		unset($options['unselect']);
 		$selectOptions = static::renderSelectOptions($selection, $items, $options);
 		return static::tag('select', "\n" . $selectOptions . "\n", $options);
+	}
+
+	/**
+	 * Generates a list of radio buttons.
+	 * A radio button list is like a checkbox list, except that it only allows single selection.
+	 * @param string $name the name attribute of each radio button.
+	 * @param string|array|null $selection the selected value(s). String for single or array for multiple selection(s).
+	 * @param array $items the data item used to generate the radio buttons.
+	 * The array keys are the radio button values, while the array values are the corresponding labels.
+	 * @param array $options options (name => config) for the radio button list container tag.
+	 * The following options are specially handled:
+	 *
+	 * - tag: string|false, the tag name of the container element. False to render radio buttons without container.
+	 *   See also [[tag()]].
+	 * - unselect: string, the value that should be submitted when none of the radio buttons is selected.
+	 *   By setting this option, a hidden input will be generated.
+	 * - encode: boolean, whether to HTML-encode the checkbox labels. Defaults to true.
+	 *   This option is ignored if `item` option is set.
+	 * - separator: string, the HTML code that separates items.
+	 * - itemOptions: array, the options for generating the radio button tag using [[radio()]].
+	 * - item: callable, a callback that can be used to customize the generation of the HTML code
+	 *   corresponding to a single item in $items. The signature of this callback must be:
+	 *
+	 *   ```php
+	 *   function ($index, $label, $name, $checked, $value)
+	 *   ```
+	 *
+	 *   where $index is the zero-based index of the radio button in the whole list; $label
+	 *   is the label for the radio button; and $name, $value and $checked represent the name,
+	 *   value and the checked status of the radio button input, respectively.
+	 *
+	 * See [[renderTagAttributes()]] for details on how attributes are being rendered.
+	 *
+	 * @return string the generated radio button list
+	 */
+	public static function radioList($name, $selection = null, $items = [], $options = [])
+	{
+		$formatter = ArrayHelper::remove($options, 'item');
+		$itemOptions = ArrayHelper::remove($options, 'itemOptions', []);
+		$encode = ArrayHelper::remove($options, 'encode', true);
+		$separator = ArrayHelper::remove($options, 'separator', "\n");
+		$tag = ArrayHelper::remove($options, 'tag', 'div');
+		// add a hidden field so that if the list box has no option being selected, it still submits a value
+		$hidden = isset($options['unselect']) ? static::hiddenInput($name, $options['unselect']) : '';
+		unset($options['unselect']);
+		$lines = [];
+		$index = 0;
+		foreach ($items as $value => $label) {
+			$checked = $selection !== null &&
+			           (!ArrayHelper::isTraversable($selection) && !strcmp($value, $selection)
+			            || ArrayHelper::isTraversable($selection) && ArrayHelper::isIn($value, $selection));
+			if ($formatter !== null) {
+				$lines[] = call_user_func($formatter, $index, $label, $name, $checked, $value);
+			} else {
+				$lines[] = static::radio($name, $checked, array_merge($itemOptions, [
+					'value' => $value,
+					'label' => $encode ? static::encode($label) : $label,
+				]));
+			}
+			$index++;
+		}
+		$visibleContent = implode($separator, $lines);
+		if ($tag === false) {
+			return $hidden . $visibleContent;
+		}
+		return $hidden . static::tag($tag, $visibleContent, $options);
 	}
 
 	/**
