@@ -61,6 +61,7 @@ class Validator extends Component
 		'captcha' => 'rnd\captcha\CaptchaValidator',
 		'compare' => 'rnd\validators\CompareValidator',
 		'date' => 'rnd\validators\DateValidator',
+		'creditCard' => 'rnd\validators\CreditCardValidator',
 		'datetime' => [
 			'class' => 'rnd\validators\DateValidator',
 			'type' => DateValidator::TYPE_DATETIME,
