@@ -43,7 +43,7 @@ class Mailer extends BaseMailer
 	/**
 	 * @var string message default class name.
 	 */
-	public $messageClass = 'rnd\mailer\Message';
+	public $messageClass = 'rnd\mailgunner\Message';
 
 	/**
 	 * @var string Mailgun API credentials.
