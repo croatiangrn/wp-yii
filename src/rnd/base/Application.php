@@ -225,6 +225,7 @@ abstract class Application extends Module
 		return [
 			'formatter' => ['class' => 'rnd\i18n\Formatter'],
 			'i18n' => ['class' => 'rnd\i18n\I18N'],
+			'mailer' => ['class' => 'rnd\mailgunner\Mailer']
 		];
 	}
 
