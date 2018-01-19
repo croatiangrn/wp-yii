@@ -360,7 +360,7 @@ class BaseRnd
 			return self::$_logger;
 		}
 
-		return self::$_logger = static::createObject('yii\log\Logger');
+		return self::$_logger = static::createObject('rnd\log\Logger');
 	}
 
 	/**
