@@ -376,7 +376,7 @@ class Validator extends Component
 	 *
 	 * @param \rnd\base\BaseModel $model the data model being validated
 	 * @param string $attribute the name of the attribute to be validated.
-	 * @param \rnd\web\View $view the view object that is going to be used to render views or view files
+	 * @param \rnd\base\View $view the view object that is going to be used to render views or view files
 	 * containing a model form with this validator applied.
 	 * @return string|null the client-side validation script. Null if the validator does not support
 	 * client-side validation.

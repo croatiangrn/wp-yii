@@ -464,5 +464,4 @@ class ArrayHelper
 		}
 		return false;
 	}
-
 }
