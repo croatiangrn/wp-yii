@@ -180,7 +180,8 @@ class Controller extends Component
 	 */
 	protected function setPageTitle()
 	{
-		$title_field = get_field( 'page_title_' . $this->language, $this->pageID );
+		$title_field = function_exists( 'get_field' ) ? get_field( 'page_title_' . $this->language, $this->pageID ) : false;
+		
 		if ($title_field) {
 			$this->headerParams['title'] = $title_field . ' - ' . get_bloginfo('name');
 			$this->headerParams['title-wpn'] = $title_field;
