@@ -241,7 +241,7 @@ class BaseHtml {
 
 	/**
 	 * Generates an image tag.
-	 * @param array|$src the image URL. This parameter will be processed by [[Url::to()]].
+	 * @param array|string $src the image URL. This parameter will be processed by [[Url::to()]].
 	 * @param array $options the tag options in terms of name-value pairs. These will be rendered as
 	 * the attributes of the resulting tag. The values will be HTML-encoded using [[encode()]].
 	 * If a value is null, the corresponding attribute will not be rendered.
