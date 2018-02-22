@@ -11,7 +11,7 @@ namespace rnd\base;
 use Rnd;
 use rnd\web\Url;
 
-abstract class AssetBundle extends Object
+abstract class AssetBundle extends RndObject
 {
 	/**
 	 * @var array CSS files to be included in wp_head()

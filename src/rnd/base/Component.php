@@ -10,7 +10,7 @@ namespace rnd\base;
 
 use Rnd;
 
-class Component extends Object
+class Component extends RndObject
 {
 	/**
 	 * @var array the attached event handlers (event name => handlers)

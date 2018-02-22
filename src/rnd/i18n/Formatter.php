@@ -10,7 +10,7 @@ use rnd\base\InvalidParamException;
 use rnd\helpers\FormatConverter;
 use rnd\helpers\Html;
 use NumberFormatter;
-use rnd\base\Object;
+use rnd\base\RndObject;
 
 /**
  * Formatter provides a set of commonly used data formatting methods.
@@ -27,7 +27,7 @@ use rnd\base\Object;
  * on 32bit systems will fall back to the PHP implementation because intl uses a 32bit UNIX timestamp internally.
  * On a 64bit system the intl formatter is used in all cases if installed.
  */
-class Formatter extends Object
+class Formatter extends RndObject
 {
 	/**
 	 * @var string the text to be displayed when formatting a `null` value.

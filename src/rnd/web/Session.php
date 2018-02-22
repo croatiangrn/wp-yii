@@ -6,9 +6,9 @@
 namespace rnd\web;
 
 
-use rnd\base\Object;
+use rnd\base\RndObject;
 
-class Session extends Object
+class Session extends RndObject
 {
 	const APP_DEBUG = true;
 	/**

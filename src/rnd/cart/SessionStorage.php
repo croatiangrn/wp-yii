@@ -6,7 +6,7 @@
 namespace rnd\cart;
 
 use Rnd;
-use rnd\base\Object;
+use rnd\base\RndObject;
 
 
 /**
@@ -14,7 +14,7 @@ use rnd\base\Object;
  *
  * @property \rnd\web\Session session
  */
-class SessionStorage extends Object implements StorageInterface
+class SessionStorage extends RndObject implements StorageInterface
 {
 	/**
 	 * @var string

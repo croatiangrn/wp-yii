@@ -13,7 +13,7 @@ use ReflectionClass;
  * @package rnd\base
  * @deprecated
  */
-class Model extends Object {
+class Model extends RndObject {
 	protected $safeAttributes = [];
 
 	public function setSafeAttributes($attributes = [])

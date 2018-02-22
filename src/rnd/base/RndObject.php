@@ -76,7 +76,7 @@ use Rnd;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Object implements Configurable
+class RndObject implements Configurable
 {
 	/**
 	 * Returns the fully qualified name of this class.
