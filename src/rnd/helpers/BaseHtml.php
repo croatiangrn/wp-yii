@@ -1265,6 +1265,21 @@ class BaseHtml {
 	{
 		return static::activeBooleanInput('checkbox', $model, $attribute, $options);
 	}
+
+    /**
+     * Generates a checkbox input.
+     * @param string $name the name attribute.
+     * @param bool $checked whether the checkbox should be checked.
+     * @param array $options the tag options in terms of name-value pairs.
+     * See [[booleanInput()]] for details about accepted attributes.
+     *
+     * @return string the generated checkbox tag
+     */
+    public static function checkbox($name, $checked = false, $options = [])
+    {
+        return static::booleanInput('checkbox', $name, $checked, $options);
+    }
+
 	/**
 	 * Generates a boolean input
 	 * This method is mainly called by [[activeCheckbox()]] and [[activeRadio()]].
