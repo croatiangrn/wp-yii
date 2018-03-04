@@ -73,7 +73,8 @@ class CreditCardValidator extends Validator
 			return [$this->messageFormat, []];
 		}
 		$creditCardNumber = preg_replace('/[ -]+/', '', $value);
-		$valid = $this->checkFormat($creditCardNumber) && $this->mod10($creditCardNumber);
+        $creditCardNumber = trim($creditCardNumber);
+        $valid = $this->checkFormat($creditCardNumber) && $this->mod10($creditCardNumber);
 
 		return $valid ? null : [$this->message, []];
 	}
