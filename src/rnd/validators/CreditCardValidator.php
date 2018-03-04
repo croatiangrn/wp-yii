@@ -62,6 +62,8 @@ class CreditCardValidator extends Validator
 		if (!empty($result)) {
 			$this->addError($object, $attribute, $result[0], $result[1]);
 		}
+
+		$object->$attribute = trim($object->$attribute);
 	}
 
 	/**
