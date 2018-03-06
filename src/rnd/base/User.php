@@ -5,7 +5,7 @@
 
 namespace rnd\base;
 
-class User extends Component
+abstract class User extends Component
 {
     protected $meta_prefix = "user_";
     /**
