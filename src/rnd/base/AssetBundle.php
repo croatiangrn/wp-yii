@@ -92,4 +92,20 @@ abstract class AssetBundle extends RndObject
 			$this->themeUrl = \Rnd::getAlias( '@themeurl');
 		}
 	}
+
+    /**
+     * This can be used in section files to register custom js script
+     *
+     * @param $url URL to script
+     * @param array $deps Dependencies
+     * @param bool $in_footer Whether it should be in footer or not
+     */
+    public function registerJs($url, $deps = [], $in_footer = true) {
+        $name = uniqid('js-');
+        if (Url::isRelative( $url )) {
+            wp_enqueue_script($name . '-js-' . time(), Rnd::getAlias('@themeurl/' . ltrim( $url, '/')), $deps, filemtime(Rnd::getAlias( '@themeroot/' . ltrim( $url, '/'))), $in_footer);
+        } else {
+            wp_enqueue_script($name . '-js-' . time(), $url, [$deps], null, $in_footer);
+        }
+	}
 }
