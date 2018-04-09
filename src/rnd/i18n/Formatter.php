@@ -816,6 +816,23 @@ class Formatter extends RndObject
 		}
 	}
 
+    /**
+     * Parses currency to number
+     *
+     * @param $value
+     * @param null $currency
+     * @return float|false
+     */
+    public function parseCurrency($value, $currency = null) {
+        $fmt = new NumberFormatter( $this->locale, NumberFormatter::CURRENCY );
+
+        if ($currency === null) {
+            $currency = $this->currencyCode;
+        }
+
+        return numfmt_parse_currency($fmt, $value, $currency);
+	}
+
 	/**
 	 * Formats the value as a currency number.
 	 *
