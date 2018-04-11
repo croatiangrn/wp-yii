@@ -29,7 +29,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
 	 * The property can take the following values:
 	 *
 	 * - a relative view name: a view file relative to [[viewPath]], e.g., 'layouts/html'.
-	 * - a [path alias](guide:concept-aliases): an absolute view file path specified as a path alias, e.g., '@app/mail/html'.
+	 * - a [path alias](guide:concept-aliases): an absolute view file path specified as a path alias, e.g., '@themeroot/mail/html'.
 	 * - a boolean false: the layout is disabled.
 	 */
 	public $htmlLayout = 'layouts/html';
@@ -150,7 +150,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
 	 *
 	 * The view to be rendered can be specified in one of the following formats:
 	 *
-	 * - path alias (e.g. "@app/mail/contact");
+	 * - path alias (e.g. "@themeroot/mail/contact");
 	 * - a relative view name (e.g. "contact") located under [[viewPath]].
 	 *
 	 * @param array $params the parameters (name-value pairs) that will be extracted and made available in the view file.
@@ -342,12 +342,12 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
 
 	/**
 	 * @return string the directory that contains the view files for composing mail messages
-	 * Defaults to '@app/mail'.
+	 * Defaults to '@themeroot/mail'.
 	 */
 	public function getViewPath()
 	{
 		if ($this->_viewPath === null) {
-			$this->setViewPath('@app/mail');
+			$this->setViewPath('@themeroot/mail');
 		}
 
 		return $this->_viewPath;
