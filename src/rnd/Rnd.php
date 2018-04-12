@@ -13,7 +13,9 @@ if (!function_exists('dd')) {
 	function dd()
 	{
 		$args = func_get_args();
+		echo '<pre>';
 		call_user_func_array('var_dump', $args);
+        echo '</pre>';
 		die();
 	}
 }
