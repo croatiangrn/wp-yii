@@ -4,7 +4,6 @@
  */
 
 namespace rnd\httpclient;
-use Exception;
 use Rnd;
 use rnd\helpers\ArrayHelper;
 use rnd\helpers\Inflector;
