@@ -340,6 +340,15 @@ class Session extends RndObject
 		session_id($value);
 	}
 
+    /**
+     * @return int the number of seconds after which data will be seen as 'garbage' and cleaned up.
+     * The default value is 1440 seconds (or the value of "session.gc_maxlifetime" set in php.ini).
+     */
+    public function getTimeout()
+    {
+        return (int) ini_get('session.gc_maxlifetime');
+    }
+
 	/**
 	 * Frees all session variables and destroys all data registered to a session.
 	 *

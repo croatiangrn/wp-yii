@@ -127,21 +127,22 @@ class Request
 		return $this->getMethod() === 'PATCH';
 	}
 
-	/**
-	 * Returns the URL origin of a CORS request.
-	 *
-	 * The return value is taken from the `Origin` [[getHeaders()|header]] sent by the browser.
-	 *
-	 * Note that the origin request header indicates where a fetch originates from.
-	 * It doesn't include any path information, but only the server name.
-	 * It is sent with a CORS requests, as well as with POST requests.
-	 * It is similar to the referer header, but, unlike this header, it doesn't disclose the whole path.
-	 * Please refer to <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin> for more information.
-	 *
-	 * @return string|null URL origin of a CORS request, `null` if not available.
-	 * @see getHeaders()
-	 * @since 2.0.13
-	 */
+    /**
+     * Returns the URL origin of a CORS request.
+     *
+     * The return value is taken from the `Origin` [[getHeaders()|header]] sent by the browser.
+     *
+     * Note that the origin request header indicates where a fetch originates from.
+     * It doesn't include any path information, but only the server name.
+     * It is sent with a CORS requests, as well as with POST requests.
+     * It is similar to the referer header, but, unlike this header, it doesn't disclose the whole path.
+     * Please refer to <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin> for more information.
+     *
+     * @return string|null URL origin of a CORS request, `null` if not available.
+     * @see   getHeaders()
+     * @since 2.0.13
+     * @throws \Exception
+     */
 	public function getOrigin()
 	{
 		return $this->getHeaders()->get('origin');

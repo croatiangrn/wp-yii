@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * @author: Marko Mikulic
@@ -10,8 +9,12 @@ namespace rnd\web;
 
 use Rnd;
 use rnd\widgets\Device;
+use rnd\widgets\ReCaptcha;
 use rnd\widgets\User;
 
+/**
+ * @property ReCaptcha reCaptcha
+ */
 class Application extends \rnd\base\Application
 {
 	/**
@@ -66,7 +69,7 @@ class Application extends \rnd\base\Application
 	/**
 	 * @return string the homepage URL
 	 */
-	public function getHomeUrl() :string
+	public function getHomeUrl()
 	{
 		return get_home_url();
 	}
