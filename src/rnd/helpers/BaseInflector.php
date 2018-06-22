@@ -6,6 +6,8 @@
 namespace rnd\helpers;
 
 
+use Rnd;
+
 class BaseInflector
 {
 	/**
@@ -208,4 +210,22 @@ class BaseInflector
 				return implode($connector, array_slice($words, 0, -1)) . $lastWordConnector . end($words);
 		}
 	}
+
+    /**
+     * Converts any "CamelCased" into an "underscored_word".
+     * @param string $words the word(s) to underscore
+     * @return string
+     */
+    public static function underscore($words)
+    {
+        return mb_strtolower(preg_replace('/(?<=\\pL)(\\p{Lu})/u', '_\\1', $words), self::encoding());
+    }
+
+    /**
+     * @return string
+     */
+    private static function encoding()
+    {
+        return isset(Rnd::$app) ? Rnd::$app->charset : 'UTF-8';
+    }
 }
