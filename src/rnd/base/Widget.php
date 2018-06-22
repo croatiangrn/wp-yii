@@ -187,7 +187,7 @@ class Widget extends Component implements ViewContextInterface
 	public function getView()
 	{
 		if ($this->_view === null) {
-			$this->_view = Rnd::$app->getView();
+//			$this->_view = Rnd::$app->getView();
 		}
 
 		return $this->_view;
