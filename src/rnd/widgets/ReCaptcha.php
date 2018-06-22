@@ -105,7 +105,7 @@ class ReCaptcha extends InputWidget
             'onload' => 'recaptchaOnloadCallback',
         ]);
         wp_enqueue_script('recaptcha-api', self::JS_API_URL . '?' . $arguments, [], null, true);
-        wp_enqueue_script('recaptcha-onload', Rnd::getAlias('@themeroot/js/recaptcha-js.js'), [], null, true);
+        wp_enqueue_script('recaptcha-onload', Rnd::getAlias('@themeurl/js/recaptcha-js.js'), [], null, true);
 
         /*if (Rnd::$app->getRequest()->getIsAjax()) {
             $view->registerJs(<<<JS
