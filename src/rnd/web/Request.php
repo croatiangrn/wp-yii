@@ -248,14 +248,16 @@ class Request
      * Returns the user IP address.
      * The IP is determined using headers and / or `$_SERVER` variables.
      * @return string|null user IP address, null if not available
+     * @throws \Exception
      */
     public function getUserIP()
     {
         foreach ($this->ipHeaders as $ipHeader) {
-            if ($this->headers->has($ipHeader)) {
-                return trim(explode(',', $this->headers->get($ipHeader))[0]);
+            if ($this->getHeaders()->has($ipHeader)) {
+                return trim(explode(',', $this->getHeaders()->get($ipHeader))[0]);
             }
         }
+
         return $this->getRemoteIP();
     }
 
