@@ -10,6 +10,10 @@ use rnd\base\Exception;
 use rnd\base\InvalidConfigException;
 use rnd\validators\IpValidator;
 
+/**
+* @property HeaderCollection $headers The header collection. This property is read-only.
+*/
+
 class Request
 {
 	private $_queryParams;
@@ -41,6 +45,18 @@ class Request
 		'Front-End-Https',
 		'X-Rewrite-Url',
 	];
+
+    /**
+     * @var string[] List of headers where proxies store the real client IP.
+     * It's not advisable to put insecure headers here.
+     * The match of header names is case-insensitive.
+     * @see $trustedHosts
+     * @see $secureHeaders
+     * @since 2.0.13
+     */
+    public $ipHeaders = [
+        'X-Forwarded-For', // Common
+    ];
 
 	/**
 	 * Returns the method of the current request (e.g. GET, POST, HEAD, PUT, PATCH, DELETE).
@@ -228,14 +244,20 @@ class Request
 		return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
 	}
 
-	/**
-	 * Returns the user IP address.
-	 * @return string|null user IP address, null if not available
-	 */
-	public function getUserIP()
-	{
-		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-	}
+    /**
+     * Returns the user IP address.
+     * The IP is determined using headers and / or `$_SERVER` variables.
+     * @return string|null user IP address, null if not available
+     */
+    public function getUserIP()
+    {
+        foreach ($this->ipHeaders as $ipHeader) {
+            if ($this->headers->has($ipHeader)) {
+                return trim(explode(',', $this->headers->get($ipHeader))[0]);
+            }
+        }
+        return $this->getRemoteIP();
+    }
 
 	/**
 	 * Returns the user host name.
@@ -392,7 +414,8 @@ class Request
 					$cidr = $headers;
 					$headers = $this->secureHeaders;
 				}
-				$validator->setRanges($cidr);
+                /** @var array $cidr */
+                $validator->setRanges($cidr);
 				if ($validator->validate($ip)) {
 					$trustedHeaders = $headers;
 					break;
