@@ -214,9 +214,10 @@ class Message extends BaseMessage
 		throw new NotSupportedException();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
+    /**
+     * @inheritdoc
+     * @throws NotSupportedException
+     */
 	public function embedContent($content, array $options = [])
 	{
 		throw new NotSupportedException();

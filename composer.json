@@ -8,7 +8,8 @@
         "paypal/rest-api-sdk-php": "*",
         "mailgun/mailgun-php": "^2.4",
         "php-http/curl-client": "^1.7",
-        "guzzlehttp/psr7": "^1.4"
+        "guzzlehttp/psr7": "^1.4",
+        "elastic-email/web-api-client": "^1.0"
     },
     "autoload": {
         "psr-4": {
