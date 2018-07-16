@@ -43,7 +43,29 @@ class Application extends \rnd\base\Application
 	 */
 	public $controller;
 
-	/**
+    private $_runtimePath;
+    /**
+     * Returns the directory that stores runtime files.
+     * @return string the directory that stores runtime files.
+     * Defaults to the "runtime" subdirectory under [[basePath]].
+     */
+    public function getRuntimePath() {
+        if ($this->_runtimePath === null) {
+            $this->setRuntimePath($this->getBasePath() . DIRECTORY_SEPARATOR . 'runtime');
+        }
+        return $this->_runtimePath;
+    }
+
+    /**
+     * Sets the directory that stores runtime files.
+     * @param string $path the directory that stores runtime files.
+     */
+    public function setRuntimePath($path)
+    {
+        $this->_runtimePath = Rnd::getAlias($path);
+        Rnd::setAlias('@runtime', $this->_runtimePath);
+    }
+    /**
 	 * @inheritdoc
 	 */
 	protected function bootstrap()

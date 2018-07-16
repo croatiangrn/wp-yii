@@ -334,19 +334,35 @@ class BaseRnd
 		throw new InvalidConfigException('Unsupported configuration type: ' . gettype($type));
 	}
 
-	/**
-	 * Logs an informative message.
-	 * An informative message is typically logged by an application to keep record of
-	 * something important (e.g. an administrator logs in).
-	 * @param string|array $message the message to be logged. This can be a simple string or a more
-	 * complex data structure, such as array.
-	 * @param string $category the category of the message.
-	 * @throws InvalidConfigException
-	 */
-	public static function info($message, $category = 'application')
-	{
-		static::getLogger()->log($message, Logger::LEVEL_INFO, $category);
-	}
+    /**
+     * Logs an informative message.
+     * An informative message is typically logged by an application to keep record of
+     * something important (e.g. an administrator logs in).
+     * @param string|array $message the message to be logged. This can be a simple string or a more
+     * complex data structure, such as array.
+     * @param string $category the category of the message.
+     * @throws InvalidConfigException
+     */
+    public static function info($message, $category = 'application')
+    {
+        static::getLogger()->log($message, Logger::LEVEL_INFO, $category);
+    }
+
+    /**
+     * Logs an informative message.
+     * An informative message is typically logged by an application to keep record of
+     * something important (e.g. an administrator logs in).
+     * @param string|array $message the message to be logged. This can be a simple string or a more
+     * complex data structure, such as array.
+     * @param string $category the category of the message.
+     * @throws InvalidConfigException
+     */
+    public static function debug($message, $category = 'application')
+    {
+        if (RND_DEBUG) {
+            static::getLogger()->log($message, Logger::LEVEL_TRACE, $category);
+        }
+    }
 
 	private static $_logger;
 
@@ -374,8 +390,8 @@ class BaseRnd
 	 */
 	public static function error($message, $category = 'application')
 	{
-		static::getLogger()->log($message, Logger::LEVEL_ERROR, $category);
-	}
+        static::getLogger()->log($message, Logger::LEVEL_ERROR, $category);
+    }
 
 	/**
 	 * Configures an object with the initial property values.

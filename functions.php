@@ -3,35 +3,39 @@
  * @author: Marko Mikulic
  */
 
-require ( __DIR__ . '/vendor/autoload.php');
-require (__DIR__ . '/src/rnd/Rnd.php');
+require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/src/rnd/Rnd.php');
 
 $config = [
-	'id' => 'My App',
-	'name' => get_bloginfo('name'),
-	'components' => [
+    'id'         => 'My App',
+    'name'       => get_bloginfo('name'),
+    'bootstrap'  => ['log'],
+    'components' => [
+        'log' => [
+            'flushInterval' => 1,
+            'traceLevel' => 3,
+            'targets' => [
+                'file'  => [
+                    'class'   => 'rnd\log\FileTarget',
+                    'levels'  => ['error', 'warning'],
+                    'exportInterval' => 1
+                ],
+            ],
+        ],
     ]
-	/*'aliases' => [
-		'@app' => __DIR__
-	],
-	'components' => [
-		'i18n' => [
-			'translations' => [
-				'app*' => [
-					'class' => 'rnd\i18n\PhpMessageSource',
-					'sourceLanguage' => 'en-US',
-					'basePath' => '@app/messages',
-				]
-			]
-		]
-	]*/
 ];
+
 $config = \rnd\helpers\ArrayHelper::merge(
-	require(__DIR__ . '/src/rnd/config.php'),
-	$config
+    require(__DIR__ . '/src/rnd/config.php'),
+    $config
 );
 
-(new rnd\web\Application($config));
+try {
+    (new rnd\web\Application($config));
+} catch (\rnd\base\InvalidConfigException $e) {
+    echo 'Call administrator!';
+    die;
+}
 
 // USE THIS FOR PRODUCTION!
 /*
