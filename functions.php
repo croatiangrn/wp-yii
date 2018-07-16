@@ -9,6 +9,8 @@ require (__DIR__ . '/src/rnd/Rnd.php');
 $config = [
 	'id' => 'My App',
 	'name' => get_bloginfo('name'),
+	'components' => [
+    ]
 	/*'aliases' => [
 		'@app' => __DIR__
 	],

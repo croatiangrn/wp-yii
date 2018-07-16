@@ -8,12 +8,14 @@ namespace rnd\web;
 
 
 use Rnd;
+use rnd\elasticmailer\Mailer;
 use rnd\widgets\Device;
 use rnd\widgets\ReCaptcha;
 use rnd\widgets\User;
 
 /**
  * @property ReCaptcha reCaptcha
+ * @property Mailer elasticMailer
  */
 class Application extends \rnd\base\Application
 {
