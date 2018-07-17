@@ -16,6 +16,7 @@ use rnd\widgets\User;
 /**
  * @property ReCaptcha reCaptcha
  * @property Mailer elasticMailer
+ * @property \rnd\mailgunner\Mailer mailer
  */
 class Application extends \rnd\base\Application
 {
