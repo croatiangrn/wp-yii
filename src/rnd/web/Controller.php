@@ -18,7 +18,6 @@ use rnd\widgets\NavWalker;
 
 class Controller extends Component
 {
-
 	/**
 	 * @var string the ID of this controller.
 	 */
@@ -130,7 +129,9 @@ class Controller extends Component
 		return get_queried_object_id();
 	}
 
-	/**
+    public $params = [];
+
+    /**
 	 * Returns menu
 	 *
 	 * @param array $args  Arguments for renderMenu method
