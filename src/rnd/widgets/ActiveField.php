@@ -7,6 +7,7 @@ namespace rnd\widgets;
 use rnd\base\BaseModel;
 use rnd\base\Component;
 use rnd\base\ErrorHandler;
+use rnd\base\InvalidConfigException;
 use rnd\helpers\ArrayHelper;
 use rnd\helpers\Html;
 use rnd\web\JsExpression;
@@ -194,7 +195,7 @@ class ActiveField extends Component
 	 * ```
 	 *
 	 * @return string the rendering result.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function render($content = null)
 	{
@@ -222,7 +223,7 @@ class ActiveField extends Component
 	/**
 	 * Renders the opening tag of the field container.
 	 * @return string the rendering result.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function begin()
 	{
@@ -360,7 +361,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the input element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function input($type, $options = [])
 	{
@@ -389,7 +390,7 @@ class ActiveField extends Component
 	 * Note that if you set a custom `id` for the input element, you may need to adjust the value of [[selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function textInput($options = [])
 	{
@@ -437,7 +438,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the input element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function passwordInput($options = [])
 	{
@@ -460,7 +461,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the input element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function fileInput($options = [])
 	{
@@ -489,7 +490,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the textarea element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function textarea($options = [])
 	{
@@ -527,7 +528,7 @@ class ActiveField extends Component
 	 *                               except that the radio is enclosed by the label tag.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function radio($options = [], $enclosedByLabel = true)
 	{
@@ -577,7 +578,7 @@ class ActiveField extends Component
 	 *                               except that the checkbox is enclosed by the label tag.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function checkbox($options = [], $enclosedByLabel = true)
 	{
@@ -601,6 +602,27 @@ class ActiveField extends Component
 		return $this;
 	}
 
+    /**
+     * Renders a list of checkboxes.
+     * A checkbox list allows multiple selection, like [[listBox()]].
+     * As a result, the corresponding submitted value is an array.
+     * The selection of the checkbox list is taken from the value of the model attribute.
+     * @param array $items   the data item used to generate the checkboxes.
+     *                       The array values are the labels, while the array keys are the corresponding checkbox values.
+     * @param array $options options (name => config) for the checkbox list.
+     *                       For the list of available options please refer to the `$options` parameter of [[\yii\helpers\Html::activeCheckboxList()]].
+     * @return $this the field object itself.
+     * @throws InvalidConfigException
+     */
+    public function checkboxList($items, $options = [])
+    {
+        $this->addAriaAttributes($options);
+        $this->adjustLabelFor($options);
+        $this->_skipLabelFor = true;
+        $this->parts['{input}'] = Html::activeCheckboxList($this->model, $this->attribute, $items, $options);
+        return $this;
+    }
+
 	/**
 	 * Renders a drop-down list.
 	 * The selection of the drop-down list is taken from the value of the model attribute.
@@ -620,7 +642,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the input element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function dropDownList($items, $options = [])
 	{
@@ -651,7 +673,7 @@ class ActiveField extends Component
 	 * If you set a custom `id` for the input element, you may need to adjust the [[$selectors]] accordingly.
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function listBox($items, $options = [])
 	{
@@ -659,30 +681,6 @@ class ActiveField extends Component
 		$this->addAriaAttributes($options);
 		$this->adjustLabelFor($options);
 		$this->parts['{input}'] = Html::activeListBox($this->model, $this->attribute, $items, $options);
-
-		return $this;
-	}
-
-	/**
-	 * Renders a list of checkboxes.
-	 * A checkbox list allows multiple selection, like [[listBox()]].
-	 * As a result, the corresponding submitted value is an array.
-	 * The selection of the checkbox list is taken from the value of the model attribute.
-	 *
-	 * @param array $items   the data item used to generate the checkboxes.
-	 *                       The array values are the labels, while the array keys are the corresponding checkbox values.
-	 * @param array $options options (name => config) for the checkbox list.
-	 *                       For the list of available options please refer to the `$options` parameter of [[\rnd\helpers\Html::activeCheckboxList()]].
-	 *
-	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
-	 */
-	public function checkboxList($items, $options = [])
-	{
-		$this->addAriaAttributes($options);
-		$this->adjustLabelFor($options);
-		$this->_skipLabelFor = true;
-		$this->parts['{input}'] = Html::activeCheckboxList($this->model, $this->attribute, $items, $options);
 
 		return $this;
 	}
@@ -698,7 +696,7 @@ class ActiveField extends Component
 	 *                       For the list of available options please refer to the `$options` parameter of [[\rnd\helpers\Html::activeRadioList()]].
 	 *
 	 * @return $this the field object itself.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function radioList($items, $options = [])
 	{
@@ -773,7 +771,7 @@ class ActiveField extends Component
 	/**
 	 * Returns the JS options for the field.
 	 * @return array the JS options.
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	protected function getClientOptions()
 	{
@@ -882,7 +880,7 @@ class ActiveField extends Component
 	 *
 	 * @param $options array input options
 	 *
-	 * @throws \rnd\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 * @since 2.0.11
 	 */
 	protected function addAriaAttributes(&$options)
