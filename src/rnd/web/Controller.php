@@ -6,6 +6,8 @@
 namespace rnd\web;
 
 
+use ReflectionClass;
+use ReflectionException;
 use Rnd;
 use rnd\base\Component;
 use rnd\base\InvalidParamException;
@@ -63,9 +65,11 @@ class Controller extends Component
 	 */
 	protected $defaultLanguage = 'en';
 	protected $language = null;
-	/**
-	 * @inheritdoc
-	 */
+
+    /**
+     * @inheritdoc
+     * @throws ReflectionException
+     */
 	public function init()
 	{
 		if ( $this->viewName === null ) {
@@ -76,13 +80,14 @@ class Controller extends Component
 		$this->setPageTitle();
 	}
 
-	/**
-	 * @param string $strToRemove
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param string $strToRemove
+     *
+     * @return mixed
+     * @throws ReflectionException
+     */
 	protected function createViewName($strToRemove = '-controller') {
-		$reflect = new \ReflectionClass($this);
+		$reflect = new ReflectionClass($this);
 		$input = $reflect->getShortName();
 
 		$input = Inflector::camel2words( $input, false);
@@ -287,6 +292,27 @@ class Controller extends Component
 		}
 	}
 
+	public $setBody = false;
+	private $bodyContent;
+
+    protected function setBodyContent()
+    {
+        $pageName = $this->viewName;
+        extract( $this->bodyParams );
+
+        $themeRoot = Rnd::getAlias('@themeroot');
+        $this->convertSectionsToArray();
+        $this->callParamSetters();
+
+        $str = "";
+        foreach ( $this->sections as $section ) {
+            $sectionFile = $themeRoot . '/views/' . $pageName . '/section-' . $section['name'] . '.php';
+            $str .= $this->renderPhpFile($sectionFile, $section['params']);
+        }
+
+        $this->bodyContent = $str;
+    }
+
 	/**
 	 * This method renders body sections
 	 *
@@ -341,8 +367,17 @@ class Controller extends Component
 	 */
 	public function render( $renderFooter = true )
 	{
+	    if ($this->setBody) {
+	        $this->setBodyContent();
+        }
 		$this->renderHeader();
-		$this->renderBody();
+
+	    if ($this->setBody) {
+	        echo $this->bodyContent;
+        } else {
+            $this->renderBody();
+        }
+
 		if ( $renderFooter ) {
 			$this->renderFooter();
 		}
